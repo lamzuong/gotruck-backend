@@ -10,12 +10,14 @@ app.use(helmet());
 const auth = require("./routes/auth")
 const conversation = require("./routes/conversation")
 const order = require("./routes/order")
+const profile = require("./routes/profile")
 
 
 
 app.use("/gotruck/auth",auth);
 app.use("/gotruck/conversation",conversation);
 app.use("/gotruck/order",order);
+app.use("/gotruck/profile",profile);
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
