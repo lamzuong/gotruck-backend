@@ -28,10 +28,31 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.get("/checkUser/:phone", async (req, res) => {
+app.get("/user/:phone", async (req, res) => {
   try {
     let cus = await Customer.findOne(req.params);
-     res.send(cus);
+    res.send(cus);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.put("/user", async (req, res) => {
+  try {
+    let cus = await Customer.findOneAndUpdate(req.body.phone, req.body);
+    res.send(cus);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.put("/user/:phone", async (req, res) => {
+  let phoneFilter;
+  if (req.params == null) phoneFilter = req.body.phone;
+  else phoneFilter = req.params;
+  try {
+    let cus = await Customer.findOneAndUpdate(req.body.phone, req.body);
+    res.send(cus);
   } catch (error) {
     res.status(500).send(error);
   }
