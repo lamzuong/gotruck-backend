@@ -12,12 +12,16 @@ const conversation = require("./routes/conversation")
 const order = require("./routes/order")
 const profile = require("./routes/profile")
 
+const demo = require("./routes/demo")
+
 
 
 app.use("/gotruck/auth",auth);
 app.use("/gotruck/conversation",conversation);
 app.use("/gotruck/order",order);
 app.use("/gotruck/profile",profile);
+
+app.use("/gotruck/demo",demo);
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
