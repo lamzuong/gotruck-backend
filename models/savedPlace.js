@@ -5,10 +5,10 @@ const savedPlaceSchema = new mongoose.Schema(
       type: String,
     },
     latitude: {
-      type: String,
+      type: Number,
     },
     longitude: {
-      type: String,
+      type: Number,
     },
     name: {
       type: String,

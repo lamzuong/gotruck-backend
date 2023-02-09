@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const distanceSchema = new mongoose.Schema(
   {
     distance: {
-      type: Number,
+      type: String,
     },
   },
   { timestamps: true }
