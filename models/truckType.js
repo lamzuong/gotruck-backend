@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const truckTypeSchema = new mongoose.Schema(
   {
     name: {
-      type: String,
+      type: Number,
     },
   },
   { timestamps: true }

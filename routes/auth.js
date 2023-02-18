@@ -38,8 +38,12 @@ app.get("/user/:phone", async (req, res) => {
 });
 
 app.put("/user", async (req, res) => {
+  console.log(req.body.phone);
   try {
-    let cus = await Customer.findOneAndUpdate(req.body.phone, req.body);
+    let cus = await Customer.findOneAndUpdate(
+      { phone: req.body.phone },
+      req.body
+    );
     res.send(cus);
   } catch (error) {
     res.status(500).send(error);
@@ -51,7 +55,10 @@ app.put("/user/:phone", async (req, res) => {
   if (req.params == null) phoneFilter = req.body.phone;
   else phoneFilter = req.params;
   try {
-    let cus = await Customer.findOneAndUpdate(req.body.phone, req.body);
+    let cus = await Customer.findOneAndUpdate(
+      { phone: req.body.phone },
+      req.body
+    );
     res.send(cus);
   } catch (error) {
     res.status(500).send(error);

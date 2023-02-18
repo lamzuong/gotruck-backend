@@ -1,11 +1,55 @@
 const exprees = require("express");
 const FeeApp = require("../models/feeApp");
-
+const Order = require("../models/order");
+const mongoose = require("mongoose");
 const app = exprees();
 
 app.get("/", async (req, res) => {
   try {
     res.send("Api order onready");
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+
+
+app.get("/notshipper/order", async (req, res) => {
+  try {
+    const order = await Order.find({status:"Chưa nhận"});
+    res.send("aaa");
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+app.get("/user/:id_user", async (req, res) => {
+  try {
+    const order = await Order.find({
+      id_customer: mongoose.Types.ObjectId(req.params.id_user),
+    });
+    res.send(order);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post("/", async (req, res) => {
+  try {
+    const order = new Order(req.body);
+    await order.save();
+    res.send(order);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.put("/", async (req, res) => {
+  try {
+    const order = await Order.findByIdAndUpdate(req.body._id, req.body);
+    res.send(order);
   } catch (error) {
     res.status(500).send(error);
   }

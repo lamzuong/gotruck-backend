@@ -2,12 +2,14 @@ const exprees = require("express");
 const TruckType = require("../models/truckType");
 const TransportPrice = require("../models/transportPrice");
 const Distance = require("../models/distance");
+const { populate } = require("../models/truckType");
 
 const app = exprees();
 
 app.get("/", async (req, res) => {
   try {
-    const transport_price = await TransportPrice.find({});
+    const transport_price = await TransportPrice.find({})
+    .populate("id_truck_type id_distance");
     res.send(transport_price);
   } catch (error) {
     res.status(500).send(error);

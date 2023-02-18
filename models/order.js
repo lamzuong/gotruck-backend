@@ -20,9 +20,16 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
-    content: {
+    good_type: {
       type: String,
     },
+    truck_type: {
+      type: String,
+    },
+    payer: {
+      type: String,
+    },
+
     date_complete: {
       type: Date,
     },
@@ -41,7 +48,7 @@ const orderSchema = new mongoose.Schema(
     distance: {
       type: Number,
     },
-    duration: {
+    expectedTime: {
       type: Number,
     },
     note: {
