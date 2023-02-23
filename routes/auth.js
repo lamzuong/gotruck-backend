@@ -20,8 +20,30 @@ app.post("/register", async (req, res) => {
       let cus = await Customer.findOneAndUpdate(filter, req.body);
       res.send(cus);
     } else {
-      await c.save();
-      res.send(c);
+      let date = new Date().getFullYear();
+      const checkHasCustomer = await Customer.findOne(
+        {},
+        {},
+        { sort: { createdAt: -1 } }
+      );
+
+      if (checkHasCustomer) {
+        let indexCusLastest = checkHasCustomer.id_cus;
+        let indexNewCus =
+          parseInt(
+            (date % 100) + "" + indexCusLastest.slice(5, indexCusLastest.length)
+          ) + 1;
+        req.body.id_cus = "CTM" + indexNewCus;
+
+        const cusNew = new Customer(req.body);
+        await cusNew.save();
+        res.send(cusNew);
+      } else {
+        req.body.id_cus = "CTM" + (date % 100) + "00001";
+        const cusNew = new Order(req.body);
+        await cusNew.save();
+        res.send(cusNew);
+      }
     }
   } catch (error) {
     res.status(500).send(error);
@@ -38,7 +60,6 @@ app.get("/user/:phone", async (req, res) => {
 });
 
 app.put("/user", async (req, res) => {
-  console.log(req.body.phone);
   try {
     let cus = await Customer.findOneAndUpdate(
       { phone: req.body.phone },

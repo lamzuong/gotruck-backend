@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 const customerSchema = new mongoose.Schema({
+  id_cus:{
+    type: String,
+  },
   name: {
     type: String,
   },

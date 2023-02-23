@@ -12,18 +12,14 @@ app.get("/", async (req, res) => {
   }
 });
 
-
-
-
 app.get("/notshipper/order", async (req, res) => {
   try {
-    const order = await Order.find({status:"Chưa nhận"});
+    const order = await Order.find({ status: "Chưa nhận" });
     res.send("aaa");
   } catch (error) {
     res.status(500).send(error);
   }
 });
-
 
 app.get("/user/:id_user", async (req, res) => {
   try {
@@ -38,9 +34,30 @@ app.get("/user/:id_user", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    const order = new Order(req.body);
-    await order.save();
-    res.send(order);
+    let date = new Date().getFullYear();
+    const checkHasOrder = await Order.findOne(
+      {},
+      {},
+      { sort: { createdAt: -1 } }
+    );
+    if (checkHasOrder) {
+      let indexOrderLastest = checkHasOrder.id_order;
+      let indexNewOrder =
+        parseInt(
+          (date % 100) +
+            "" +
+            indexOrderLastest.slice(5, indexOrderLastest.length)
+        ) + 1;
+      req.body.id_order = "ODR" + indexNewOrder;
+      const order = new Order(req.body);
+      await order.save();
+      res.send(order);
+    } else {
+      req.body.id_order = "ODR" + (date % 100) + "00001";
+      const order = new Order(req.body);
+      await order.save();
+      res.send(order);
+    }
   } catch (error) {
     res.status(500).send(error);
   }
