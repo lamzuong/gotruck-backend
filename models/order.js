@@ -1,28 +1,38 @@
 const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema(
   {
-    id_order:{
+    id_order: {
       type: String,
     },
     id_customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Customer",
     },
-    id_shipper: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Shipper",
-    },
-    list_shipper_cancel: [
-      {
-        id_shipper_cancel: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Shipper",
-        },
-        reason: {
-          type: String,
-        },
+    shipper: {
+      id_shipper: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Shipper",
       },
-    ],
+      truck: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "TruckShipper",
+      },
+      date_receive: {
+        type: Date,
+      },
+    },
+    reason_cancel: {
+      user_cancel: {
+        type: String,
+        enum: ["Customer", "Shipper"],
+      },
+      content: {
+        type: String,
+      },
+      date_cancel: {
+        type: Date,
+      },
+    },
     good_type: {
       type: String,
     },
@@ -32,7 +42,6 @@ const orderSchema = new mongoose.Schema(
     payer: {
       type: String,
     },
-
     date_complete: {
       type: Date,
     },
@@ -95,12 +104,18 @@ const orderSchema = new mongoose.Schema(
     rate_shipper: {
       type: Number,
     },
+
     list_image_from: [
       {
         type: String,
       },
     ],
-    list_image_to: [
+    list_image_from_of_shipper: [
+      {
+        type: String,
+      },
+    ],
+    list_image_to_of_shipper: [
       {
         type: String,
       },

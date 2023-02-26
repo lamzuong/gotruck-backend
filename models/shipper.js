@@ -10,8 +10,11 @@ const shipperSchema = new mongoose.Schema(
     phone: {
       type: String,
     },
-    list_image: {
-      type: [String],
+    email: {
+      type: String,
+    },
+    address: {
+      type: String,
     },
     avatar: {
       type: String,
@@ -30,17 +33,6 @@ const shipperSchema = new mongoose.Schema(
     },
     cmnd: {
       type: String,
-    },
-    infoXe: {
-      bien_so: {
-        type: String,
-      },
-      ten: {
-        type: String,
-      },
-      loai_xe: {
-        type: String,
-      },
     },
   },
   { timestamps: true }
