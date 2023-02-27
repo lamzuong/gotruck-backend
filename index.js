@@ -53,10 +53,14 @@ const io = require("socket.io")(server, {
 
 io.on("connection", (socket) => {
   socket.on("customer-has-new-order", (data) => {
+    setTimeout(() => {
+      io.emit(data.type_truck + "cancel", data.dataOrder);
+    }, 900000);
     io.emit(data.type_truck + "", data.dataOrder); //Gửi tất cả
   });
   socket.on("shipper_receive", (data) => {
     io.emit(data.id_customer + "", data); //Gửi tất cả
+    io.emit(data.truck_type + "received", data); //Gửi tất cả
   });
   socket.on("shipper_cancel", (data) => {
     io.emit(data.id_customer + "", data); //Gửi tất cả
