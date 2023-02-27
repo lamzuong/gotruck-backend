@@ -26,14 +26,18 @@ app.put("/", async (req, res) => {
     if (req.body.status === "Đã hủy") {
       req.body.reason_cancel.date_cancel = new Date();
       const order = await Order.findByIdAndUpdate(req.body._id, req.body);
+      order.status = "Đã hủy";
       res.send(order);
     } else {
-      const checkHasShipper = await Order.findById(req.body._id);
-      if (checkHasShipper.status === "Đã nhận") {
-        res.send(checkHasShipper);
+      const checkStatus = await Order.findById(req.body._id);
+      if (checkStatus.status === "Đã hủy") {
+        res.send(checkStatus);
+      } else if (checkStatus.status === "Đã nhận") {
+        res.send(checkStatus);
       } else {
         req.body.shipper.date_receive = new Date();
         const order = await Order.findByIdAndUpdate(req.body._id, req.body);
+        order.status = "Đã nhận";
         res.send(order);
       }
     }

@@ -24,7 +24,7 @@ const orderSchema = new mongoose.Schema(
     reason_cancel: {
       user_cancel: {
         type: String,
-        enum: ["Customer", "Shipper"],
+        enum: ["Customer", "Shipper","AutoDelete"],
       },
       content: {
         type: String,
