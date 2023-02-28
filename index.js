@@ -17,7 +17,6 @@ const authShipper = require("./routes/authShipper");
 const profileShipper = require("./routes/profileShipper");
 const orderShipper = require("./routes/orderShipper");
 
-
 app.use("/gotruck/auth", auth);
 app.use("/gotruck/conversation", conversation);
 app.use("/gotruck/order", order);
