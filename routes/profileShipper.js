@@ -1,5 +1,7 @@
 const exprees = require("express");
+
 const TruckShipper = require("../models/truck_shipper");
+
 const app = exprees();
 
 app.get("/vehicle/:id_shipper", async (req, res) => {

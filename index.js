@@ -11,7 +11,7 @@ const auth = require("./routes/auth");
 const conversation = require("./routes/conversation");
 const order = require("./routes/order");
 const profile = require("./routes/profile");
-const transportPrice = require("./routes/transoprtPrice");
+const transportPrice = require("./routes/transportPrice");
 
 const authShipper = require("./routes/authShipper");
 const profileShipper = require("./routes/profileShipper");
@@ -26,6 +26,7 @@ app.use("/gotruck/transportPrice", transportPrice);
 app.use("/gotruck/authshipper", authShipper);
 app.use("/gotruck/profileshipper", profileShipper);
 app.use("/gotruck/ordershipper", orderShipper);
+
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -56,14 +57,14 @@ io.on("connection", (socket) => {
     setTimeout(() => {
       io.emit(data.type_truck + "cancel", data.dataOrder);
     }, 900000);
-    io.emit(data.type_truck + "", data.dataOrder); //Gửi tất cả
+    io.emit(data.type_truck + "", data.dataOrder); 
   });
   socket.on("shipper_receive", (data) => {
-    io.emit(data.id_customer + "", data); //Gửi tất cả
-    io.emit(data.truck_type + "received", data); //Gửi tất cả
+    io.emit(data.id_customer + "", data); 
+    io.emit(data.truck_type + "received", data); 
   });
   socket.on("shipper_cancel", (data) => {
-    io.emit(data.id_customer + "", data); //Gửi tất cả
+    io.emit(data.id_customer + "", data); 
   });
 });
 

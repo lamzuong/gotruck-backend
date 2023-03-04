@@ -12,6 +12,12 @@ const transportPriceSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
+    start_date: {
+      type: Date,
+    },
+    end_date: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );
