@@ -65,7 +65,9 @@ app.post("/", async (req, res) => {
 
 app.put("/", async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(req.body._id, req.body);
+    const order = await Order.findByIdAndUpdate(req.body._id, req.body, {
+      new: true,
+    });
     res.send(order);
   } catch (error) {
     res.status(500).send(error);
