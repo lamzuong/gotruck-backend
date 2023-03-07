@@ -17,7 +17,9 @@ app.post("/register", async (req, res) => {
   const c = new Customer(req.body);
   try {
     if (checkUser) {
-      let cus = await Customer.findOneAndUpdate(filter, req.body);
+      let cus = await Customer.findOneAndUpdate(filter, req.body, {
+        new: true,
+      });
       res.send(cus);
     } else {
       let date = new Date().getFullYear();
@@ -63,7 +65,10 @@ app.put("/user", async (req, res) => {
   try {
     let cus = await Customer.findOneAndUpdate(
       { phone: req.body.phone },
-      req.body
+      req.body,
+      {
+        new: true,
+      }
     );
     res.send(cus);
   } catch (error) {
@@ -78,7 +83,10 @@ app.put("/user/:phone", async (req, res) => {
   try {
     let cus = await Customer.findOneAndUpdate(
       { phone: req.body.phone },
-      req.body
+      req.body,
+      {
+        new: true,
+      }
     );
     res.send(cus);
   } catch (error) {

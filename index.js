@@ -66,12 +66,35 @@ io.on("connection", (socket) => {
     }, 900000);
     io.emit(data.type_truck + "", data.dataOrder);
   });
+
   socket.on("shipper_receive", (data) => {
     io.emit(data.id_customer + "", data);
     io.emit(data.truck_type + "received", data);
   });
+
   socket.on("shipper_cancel", (data) => {
     io.emit(data.id_customer + "", data);
+  });
+
+  socket.on("customer_cancel", (data) => {
+    io.emit(data.truck_type + "cancel", data);
+  });
+
+  socket.on("customer_cancel_received", (data) => {
+    io.emit(data.truck_type + "cancel_received", data);
+  });
+
+  socket.on("shipper_shipping", (data) => {
+    io.emit(data.id_customer + "", data);
+  });
+
+  socket.on("shipper_completed", (data) => {
+    io.emit(data.id_customer + "", data);
+  });
+
+  socket.on("location_shipper", (data) => {
+    console.log(data.locationShipper?.address);
+    io.emit(data.id_order + "", data.locationShipper);
   });
 });
 

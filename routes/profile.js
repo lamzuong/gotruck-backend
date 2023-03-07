@@ -36,7 +36,7 @@ app.put("/savedplace", async (req, res) => {
   try {
     const savedPlace = await SavedPlace.findByIdAndUpdate(
       req.body.id,
-      req.body
+      req.body,{new: true}
     );
     res.send(savedPlace);
   } catch (error) {
