@@ -2,10 +2,12 @@ const exprees = require("express");
 const app = exprees();
 const dotenv = require("dotenv");
 const helmet = require("helmet");
+const cors = require("cors");
 
 dotenv.config();
 app.use(exprees.json());
 app.use(helmet());
+app.use(cors());
 
 const auth = require("./routes/auth");
 const conversation = require("./routes/conversation");
@@ -17,6 +19,9 @@ const authShipper = require("./routes/authShipper");
 const profileShipper = require("./routes/profileShipper");
 const orderShipper = require("./routes/orderShipper");
 
+const earningAdmin = require("./routes/earningAdmin");
+const goodsType = require("./routes/goodsType");
+
 app.use("/gotruck/auth", auth);
 app.use("/gotruck/conversation", conversation);
 app.use("/gotruck/order", order);
@@ -27,6 +32,8 @@ app.use("/gotruck/authshipper", authShipper);
 app.use("/gotruck/profileshipper", profileShipper);
 app.use("/gotruck/ordershipper", orderShipper);
 
+app.use("/gotruck/earning", earningAdmin);
+app.use("/gotruck/goodsType", goodsType);
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -57,14 +64,14 @@ io.on("connection", (socket) => {
     setTimeout(() => {
       io.emit(data.type_truck + "cancel", data.dataOrder);
     }, 900000);
-    io.emit(data.type_truck + "", data.dataOrder); 
+    io.emit(data.type_truck + "", data.dataOrder);
   });
   socket.on("shipper_receive", (data) => {
-    io.emit(data.id_customer + "", data); 
-    io.emit(data.truck_type + "received", data); 
+    io.emit(data.id_customer + "", data);
+    io.emit(data.truck_type + "received", data);
   });
   socket.on("shipper_cancel", (data) => {
-    io.emit(data.id_customer + "", data); 
+    io.emit(data.id_customer + "", data);
   });
 });
 
