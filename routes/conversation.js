@@ -10,9 +10,9 @@ app.get("/:id_customer", async (req, res) => {
   try {
     const listConversation = await Conversation.find({
       id_customer: mongoose.Types.ObjectId(req.params.id_customer),
-    }).lean()
-    .populate("id_customer id_shipper");
-
+    })
+      .lean()
+      .populate("id_customer id_shipper");
 
     for (let i = 0; i < listConversation.length; i++) {
       const lastMessage = await Message.findOne(
@@ -22,7 +22,7 @@ app.get("/:id_customer", async (req, res) => {
       );
       listConversation[i].lastMess = lastMessage.message;
     }
-    
+
     res.send(listConversation);
   } catch (error) {
     res.status(500).send(error);
