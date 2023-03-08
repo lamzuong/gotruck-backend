@@ -21,6 +21,7 @@ const orderShipper = require("./routes/orderShipper");
 
 const earningAdmin = require("./routes/earningAdmin");
 const goodsType = require("./routes/goodsType");
+const orderAdmin = require("./routes/orderAdmin");
 
 app.use("/gotruck/auth", auth);
 app.use("/gotruck/conversation", conversation);
@@ -34,6 +35,7 @@ app.use("/gotruck/ordershipper", orderShipper);
 
 app.use("/gotruck/earning", earningAdmin);
 app.use("/gotruck/goodsType", goodsType);
+app.use("/gotruck/orderAdmin", orderAdmin);
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
