@@ -25,7 +25,7 @@ app.get("/user/:id_user", async (req, res) => {
   try {
     const order = await Order.find({
       id_customer: mongoose.Types.ObjectId(req.params.id_user),
-    });
+    }).populate("shipper.id_shipper shipper.truck");
     res.send(order);
   } catch (error) {
     res.status(500).send(error);

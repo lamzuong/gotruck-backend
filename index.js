@@ -95,7 +95,7 @@ io.on("connection", (socket) => {
   socket.on("location_shipper", (data) => {
     console.log(data);
     if (data.id_order) {
-    io.emit(data.id_order + "", data.locationShipper);
+      io.emit(data.id_order + "", data.locationShipper);
     }
   });
 });
