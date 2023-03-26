@@ -62,12 +62,10 @@ app.get("/search", async (req, res) => {
       },
       {
         $addFields: {
-          "shipper.truckr": { $arrayElemAt: ["$shipper.truck", 0] },
+          "shipper.truck": { $arrayElemAt: ["$shipper.truck", 0] },
         },
       },
       { $unwind: "$id_customer" },
-      // { $unwind: "$shipper.id_shipper" },
-      // { $unwind: "$shipper.truck" },
     ];
     if (idCustomer !== "") {
       queryArr.push({
