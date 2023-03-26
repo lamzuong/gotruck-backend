@@ -17,8 +17,14 @@ const notificationSchema = new mongoose.Schema(
     title: {
       type: String,
     },
-    type_notifi: {
+    image: [{ type: String }],
+    type_notify: {
       type: String,
+      enum: ["Warning", "Order"],
+    },
+    type_send: {
+      type: String,
+      enum: ["All", "AllCustomer", "AllShipper", "Specific"],
     },
   },
   { timestamps: true }
