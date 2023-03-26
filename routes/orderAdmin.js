@@ -14,84 +14,83 @@ app.get("/", async (req, res) => {
     res.status(500).send(error);
   }
 });
-
-app.get("/notshipper/order", async (req, res) => {
+app.get("/pagination", async (req, res) => {
   try {
-    const order = await Order.find({ status: "Chưa nhận" });
-    res.send("aaa");
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-app.get("/user/:id_user", async (req, res) => {
-  try {
-    const order = await Order.find({
-      id_customer: mongoose.Types.ObjectId(req.params.id_user),
-    }).populate("shipper.id_shipper shipper.truck");
+    const { page, limit, status } = req.query;
+    let queryStr = status === "Tất cả" ? {} : { status };
+    const order = await Order.find(queryStr)
+      .populate("id_customer shipper.id_shipper shipper.truck")
+      .skip((page - 1) * limit)
+      .limit(limit);
     res.send(order);
   } catch (error) {
     res.status(500).send(error);
   }
 });
-
-app.post("/", async (req, res) => {
+app.get("/search", async (req, res) => {
   try {
-    let date = new Date().getFullYear();
-    const checkHasOrder = await Order.findOne(
-      {},
-      {},
-      { sort: { createdAt: -1 } }
-    );
-    if (checkHasOrder) {
-      let indexOrderLastest = checkHasOrder.id_order;
-      let indexNewOrder =
-        parseInt(
-          (date % 100) +
-            "" +
-            indexOrderLastest.slice(5, indexOrderLastest.length)
-        ) + 1;
-      req.body.id_order = "ODR" + indexNewOrder;
-      const order = new Order(req.body);
-      await order.save();
-      res.send(order);
-    } else {
-      req.body.id_order = "ODR" + (date % 100) + "00001";
-      const order = new Order(req.body);
-      await order.save();
-      res.send(order);
+    const { page, limit, idCustomer, idShipper, idOrder } = req.query;
+    const queryArr = [
+      {
+        $lookup: {
+          from: "customer",
+          localField: "id_customer",
+          foreignField: "_id",
+          as: "id_customer",
+        },
+      },
+      {
+        $lookup: {
+          from: "shipper",
+          localField: "shipper.id_shipper",
+          foreignField: "_id",
+          as: "shipper.id_shipper",
+        },
+      },
+      {
+        $addFields: {
+          "shipper.id_shipper": { $arrayElemAt: ["$shipper.id_shipper", 0] },
+        },
+      },
+      {
+        $lookup: {
+          from: "truck_shipper",
+          localField: "shipper.truck",
+          foreignField: "_id",
+          as: "shipper.truck",
+        },
+      },
+      {
+        $addFields: {
+          "shipper.truckr": { $arrayElemAt: ["$shipper.truck", 0] },
+        },
+      },
+      { $unwind: "$id_customer" },
+      // { $unwind: "$shipper.id_shipper" },
+      // { $unwind: "$shipper.truck" },
+    ];
+    if (idCustomer !== "") {
+      queryArr.push({
+        $match: { "id_customer.id_cus": { $regex: ".*" + idCustomer + ".*" } },
+      });
     }
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+    if (idShipper !== "") {
+      queryArr.push({
+        $match: { "shipper.id_shipper": { $regex: ".*" + idShipper + ".*" } },
+      });
+    }
+    if (idOrder !== "") {
+      queryArr.push({
+        $match: { id_order: { $regex: ".*" + idOrder + ".*" } },
+      });
+    }
+    if (page) {
+      queryArr.push({ $skip: (page - 1) * limit });
+      queryArr.push({ $limit: +limit });
+    }
 
-app.put("/", async (req, res) => {
-  try {
-    const order = await Order.findByIdAndUpdate(req.body._id, req.body, {
-      new: true,
-    });
+    const order = await Order.aggregate(queryArr);
     res.send(order);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-app.get("/feeapp", async (req, res) => {
-  try {
-    const fee_app = await FeeApp.find({});
-    fee_app.sort((a, b) => b.dateStart.getTime() - a.dateStart.getTime());
-    res.send(fee_app[0]);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-app.post("/feeapp", async (req, res) => {
-  try {
-    const feeapp = new FeeApp(req.body);
-    await feeapp.save();
-    res.send(feeapp);
   } catch (error) {
     res.status(500).send(error);
   }
