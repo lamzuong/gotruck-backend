@@ -2,7 +2,6 @@ const exprees = require("express");
 const TruckType = require("../models/truckType");
 const TransportPrice = require("../models/transportPrice");
 const Distance = require("../models/distance");
-const { populate } = require("../models/truckType");
 
 const app = exprees();
 
@@ -54,6 +53,7 @@ app.delete("/delete/:id", async (req, res) => {
 app.get("/trucktype", async (req, res) => {
   try {
     const trucktype = await TruckType.find({});
+    trucktype.sort((a, b) => parseInt(a.name) - parseInt(b.name));
     res.send(trucktype);
   } catch (error) {
     res.status(500).send(error);

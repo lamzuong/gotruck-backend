@@ -14,8 +14,12 @@ app.get("/", async (req, res) => {
 
 app.get("/notshipper/order", async (req, res) => {
   try {
-    const order = await Order.find({ status: "Chưa nhận" });
-    res.send("aaa");
+    const order = await Order.find(
+      { status: "Chưa nhận" },
+      {},
+      { sort: { updatedAt: -1 } }
+    );
+    res.send(order);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -23,9 +27,14 @@ app.get("/notshipper/order", async (req, res) => {
 
 app.get("/user/:id_user", async (req, res) => {
   try {
-    const order = await Order.find({
-      id_customer: mongoose.Types.ObjectId(req.params.id_user),
-    }).populate("shipper.id_shipper shipper.truck");
+    const order = await Order.find(
+      {
+        id_customer: mongoose.Types.ObjectId(req.params.id_user),
+      },
+      {},
+      { sort: { updatedAt: -1 } }
+    ).populate("shipper.id_shipper shipper.truck");
+
     res.send(order);
   } catch (error) {
     res.status(500).send(error);
@@ -89,6 +98,22 @@ app.post("/feeapp", async (req, res) => {
     const feeapp = new FeeApp(req.body);
     await feeapp.save();
     res.send(feeapp);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.post("/review", async (req, res) => {
+  try {
+    req.body.order.rate_shipper.time = new Date();
+    const order = await Order.findByIdAndUpdate(
+      req.body.order._id,
+      req.body.order,
+      {
+        new: true,
+      }
+    );
+    res.send(order);
   } catch (error) {
     res.status(500).send(error);
   }

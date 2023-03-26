@@ -13,17 +13,29 @@ const shipperSchema = new mongoose.Schema(
     email: {
       type: String,
     },
+    expected_address: {
+      address: {
+        type: String,
+      },
+      latitude: {
+        type: Number,
+      },
+      longitude: {
+        type: Number,
+      },
+      time_used: {
+        type: Date,
+      },
+    },
     address: {
       type: String,
     },
     avatar: {
       type: String,
     },
-    online: {
-      type: Boolean,
-    },
     status: {
       type: String,
+      enums: ["Đã duyệt", "Chưa duyệt"],
     },
     deleted: {
       type: Boolean,
@@ -33,6 +45,9 @@ const shipperSchema = new mongoose.Schema(
     },
     cmnd: {
       type: String,
+    },
+    balance: {
+      type: Number,
     },
   },
   { timestamps: true }

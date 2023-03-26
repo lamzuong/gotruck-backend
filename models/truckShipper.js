@@ -22,6 +22,7 @@ const truckShipperSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
+      enum: ["Chưa duyệt", "Đã duyệt"],
     },
     default: {
       type: Boolean,

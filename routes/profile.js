@@ -14,9 +14,13 @@ app.get("/", async (req, res) => {
 
 app.get("/savedplace/:id_customer", async (req, res) => {
   try {
-    const savedPlace = await SavedPlace.find({
-      id_customer: mongoose.Types.ObjectId(req.params.id_customer),
-    });
+    const savedPlace = await SavedPlace.find(
+      {
+        id_customer: mongoose.Types.ObjectId(req.params.id_customer),
+      },
+      {},
+      { sort: { updatedAt: -1 } }
+    );
     res.send(savedPlace);
   } catch (error) {
     res.status(500).send(error);
@@ -36,7 +40,8 @@ app.put("/savedplace", async (req, res) => {
   try {
     const savedPlace = await SavedPlace.findByIdAndUpdate(
       req.body.id,
-      req.body,{new: true}
+      req.body,
+      { new: true }
     );
     res.send(savedPlace);
   } catch (error) {
@@ -56,9 +61,13 @@ app.delete("/savedplace/:_id", async (req, res) => {
 
 app.get("/feedback/:id_customer", async (req, res) => {
   try {
-    const feedBack = await FeedBack.find({
-      id_feedback: mongoose.Types.ObjectId(req.params.id_customer),
-    });
+    const feedBack = await FeedBack.find(
+      {
+        id_feedback: mongoose.Types.ObjectId(req.params.id_customer),
+      },
+      {},
+      { sort: { updatedAt: -1 } }
+    );
     res.send(feedBack);
   } catch (error) {
     res.status(500).send(error);

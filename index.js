@@ -23,6 +23,9 @@ const earningAdmin = require("./routes/earningAdmin");
 const goodsType = require("./routes/goodsType");
 const orderAdmin = require("./routes/orderAdmin");
 
+const bank = require("./routes/bank");
+const pageRegister= require("./routes/pageRegister")
+
 app.use("/gotruck/auth", auth);
 app.use("/gotruck/conversation", conversation);
 app.use("/gotruck/order", order);
@@ -36,6 +39,9 @@ app.use("/gotruck/ordershipper", orderShipper);
 app.use("/gotruck/earning", earningAdmin);
 app.use("/gotruck/goodsType", goodsType);
 app.use("/gotruck/orderAdmin", orderAdmin);
+
+app.use("/gotruck/bank", bank);
+app.use("/gotruck/pageregister", pageRegister);
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -95,10 +101,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("location_shipper", (data) => {
-    console.log(data);
     if (data.id_order) {
       io.emit(data.id_order + "", data.locationShipper);
     }
+  });
+
+  socket.on("send_message", (data) => {
+    io.emit(data.id_receive + "message", data);
   });
 });
 

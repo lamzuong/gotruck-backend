@@ -1,5 +1,5 @@
 const exprees = require("express");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const Conversation = require("../models/conversation");
 
 const Message = require("../models/message");
@@ -15,14 +15,49 @@ app.get("/:id_customer", async (req, res) => {
       .populate("id_customer id_shipper");
 
     for (let i = 0; i < listConversation.length; i++) {
-      const lastMessage = await Message.findOne(
-        { id_conversation: listConversation[i]._id },
-        {},
-        { sort: { createdAt: -1 } }
-      );
-      listConversation[i].lastMess = lastMessage.message;
+      try {
+        const lastMessage = await Message.findOne(
+          { id_conversation: listConversation[i]._id },
+          {},
+          { sort: { createdAt: -1 } }
+        );
+        listConversation[i].lastMess = lastMessage.message;
+        listConversation[i].timeLastMess = lastMessage.createdAt;
+      } catch (error) {
+        listConversation[i].lastMess = "";
+        listConversation[i].timeLastMess = new Date();
+      }
     }
+    listConversation.sort((a, b) => a.timeLastMess - b.timeLastMess);
+    res.send(listConversation);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
+app.get("/shipper/:id_shipper", async (req, res) => {
+  try {
+    const listConversation = await Conversation.find({
+      id_shipper: mongoose.Types.ObjectId(req.params.id_shipper),
+    })
+      .lean()
+      .populate("id_customer id_shipper");
+
+    for (let i = 0; i < listConversation.length; i++) {
+      try {
+        const lastMessage = await Message.findOne(
+          { id_conversation: listConversation[i]._id },
+          {},
+          { sort: { createdAt: -1 } }
+        );
+        listConversation[i].lastMess = lastMessage.message;
+        listConversation[i].timeLastMess = lastMessage.createdAt;
+      } catch (error) {
+        listConversation[i].lastMess = "";
+        listConversation[i].timeLastMess = new Date();
+      }
+    }
+    listConversation.sort((a, b) => a.timeLastMess - b.timeLastMess);
     res.send(listConversation);
   } catch (error) {
     res.status(500).send(error);
@@ -31,16 +66,24 @@ app.get("/:id_customer", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    const checkHaveConversation = await Conversation.find({
+    const haveConversation = await Conversation.findOne({
       id_customer: mongoose.Types.ObjectId(req.body.id_customer),
       id_shipper: mongoose.Types.ObjectId(req.body.id_shipper),
-    });
-    if (checkHaveConversation.length == 0) {
+    })
+      .lean()
+      .populate("id_customer id_shipper");
+    if (haveConversation) {
+      res.send(haveConversation);
+    } else {
       const conversation = new Conversation(req.body);
       await conversation.save();
-      res.send(conversation);
-    } else {
-      res.send(checkHaveConversation);
+      const cvs = await Conversation.findOne({
+        id_customer: mongoose.Types.ObjectId(req.body.id_customer),
+        id_shipper: mongoose.Types.ObjectId(req.body.id_shipper),
+      })
+        .lean()
+        .populate("id_customer id_shipper");
+      res.send(cvs);
     }
   } catch (error) {
     res.status(500).send(error);

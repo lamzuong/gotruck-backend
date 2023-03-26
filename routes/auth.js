@@ -42,7 +42,7 @@ app.post("/register", async (req, res) => {
         res.send(cusNew);
       } else {
         req.body.id_cus = "CTM" + (date % 100) + "00001";
-        const cusNew = new Order(req.body);
+        const cusNew = new Customer(req.body);
         await cusNew.save();
         res.send(cusNew);
       }
@@ -55,7 +55,11 @@ app.post("/register", async (req, res) => {
 app.get("/user/:phone", async (req, res) => {
   try {
     let cus = await Customer.findOne(req.params);
-    res.send(cus);
+    if (cus) {
+      res.send(cus);
+    } else {
+      res.send({ notFound: true });
+    }
   } catch (error) {
     res.status(500).send(error);
   }
@@ -76,14 +80,13 @@ app.put("/user", async (req, res) => {
   }
 });
 
-app.put("/user/:phone", async (req, res) => {
-  let phoneFilter;
-  if (req.params == null) phoneFilter = req.body.phone;
-  else phoneFilter = req.params;
+app.put("/user/edituser", async (req, res) => {
+  let phoneOld = req.body.phoneInit;
+
   try {
     let cus = await Customer.findOneAndUpdate(
-      { phone: req.body.phone },
-      req.body,
+      { phone: phoneOld },
+      req.body.user,
       {
         new: true,
       }
