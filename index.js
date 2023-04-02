@@ -22,9 +22,11 @@ const orderShipper = require("./routes/orderShipper");
 const earningAdmin = require("./routes/earningAdmin");
 const goodsType = require("./routes/goodsType");
 const orderAdmin = require("./routes/orderAdmin");
+const customer = require("./routes/customer");
+const shipperAdmin = require("./routes/shipperAdmin");
 
 const bank = require("./routes/bank");
-const pageRegister= require("./routes/pageRegister")
+const pageRegister = require("./routes/pageRegister");
 
 app.use("/gotruck/auth", auth);
 app.use("/gotruck/conversation", conversation);
@@ -39,6 +41,8 @@ app.use("/gotruck/ordershipper", orderShipper);
 app.use("/gotruck/earning", earningAdmin);
 app.use("/gotruck/goodsType", goodsType);
 app.use("/gotruck/orderAdmin", orderAdmin);
+app.use("/gotruck/customer", customer);
+app.use("/gotruck/shipperAdmin", shipperAdmin);
 
 app.use("/gotruck/bank", bank);
 app.use("/gotruck/pageregister", pageRegister);

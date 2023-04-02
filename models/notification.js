@@ -20,7 +20,7 @@ const notificationSchema = new mongoose.Schema(
     image: [{ type: String }],
     type_notify: {
       type: String,
-      enum: ["Warning", "Order"],
+      enum: ["Normal", "Warning", "Order", "Discount"],
     },
     type_send: {
       type: String,
