@@ -19,6 +19,7 @@ const authShipper = require("./routes/authShipper");
 const profileShipper = require("./routes/profileShipper");
 const orderShipper = require("./routes/orderShipper");
 
+const admin = require("./routes/admin");
 const earningAdmin = require("./routes/earningAdmin");
 const goodsType = require("./routes/goodsType");
 const orderAdmin = require("./routes/orderAdmin");
@@ -38,6 +39,7 @@ app.use("/gotruck/authshipper", authShipper);
 app.use("/gotruck/profileshipper", profileShipper);
 app.use("/gotruck/ordershipper", orderShipper);
 
+app.use("/gotruck/admin", admin);
 app.use("/gotruck/earning", earningAdmin);
 app.use("/gotruck/goodsType", goodsType);
 app.use("/gotruck/orderAdmin", orderAdmin);
