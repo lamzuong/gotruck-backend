@@ -1,0 +1,36 @@
+const express = require("express");
+const Policy = require("../models/policy");
+const app = express();
+
+app.post("/", async (req, res) => {
+  try {
+    const policy = new Policy(req.body);
+    await policy.save();
+    res.send(policy);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+app.put("/", async (req, res) => {
+  try {
+    const policy = await Policy.findOneAndUpdate(
+      { _id: req.body._id },
+      req.body
+    );
+    res.send(policy);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+app.get("/byType/:type", async (req, res) => {
+  try {
+    const policy = await Policy.find({ type: req.params.type }).populate(
+      "history.modifiedBy deletedBy"
+    );
+    res.send(policy);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+module.exports = app;

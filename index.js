@@ -25,6 +25,7 @@ const goodsType = require("./routes/goodsType");
 const orderAdmin = require("./routes/orderAdmin");
 const customer = require("./routes/customer");
 const shipperAdmin = require("./routes/shipperAdmin");
+const policy = require("./routes/policy");
 
 const bank = require("./routes/bank");
 const pageRegister = require("./routes/pageRegister");
@@ -45,6 +46,7 @@ app.use("/gotruck/goodsType", goodsType);
 app.use("/gotruck/orderAdmin", orderAdmin);
 app.use("/gotruck/customer", customer);
 app.use("/gotruck/shipperAdmin", shipperAdmin);
+app.use("/gotruck/policy", policy);
 
 app.use("/gotruck/bank", bank);
 app.use("/gotruck/pageregister", pageRegister);
