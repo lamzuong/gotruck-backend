@@ -8,7 +8,7 @@ const app = exprees();
 app.get("/trucktype", async (req, res) => {
   try {
     const trucktype = await TruckType.find({});
-    trucktype.sort((a, b) => parseInt(a.name) - parseInt(b.name));
+    trucktype.sort((a, b) => Number(a.name) - Number(b.name));
     res.send(trucktype);
   } catch (error) {
     res.status(500).send(error);

@@ -35,7 +35,7 @@ const shipperSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enums: ["Đã duyệt", "Chưa duyệt"],
+      enums: ["Đã duyệt", "Chưa duyệt", "Từ chối"],
     },
     deleted: {
       type: Boolean,
@@ -48,6 +48,9 @@ const shipperSchema = new mongoose.Schema(
     },
     balance: {
       type: Number,
+    },
+    reason_cancel: {
+      type: String,
     },
   },
   { timestamps: true }

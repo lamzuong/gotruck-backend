@@ -30,6 +30,7 @@ const truckShipperSchema = new mongoose.Schema(
     deleted: {
       type: Boolean,
     },
+    list_vehicle_registration: [{ type: String }],
   },
   { timestamps: true }
 );

@@ -132,4 +132,20 @@ app.put("/expectedaddress", async (req, res) => {
   }
 });
 
+app.get("/shipping/:id_shipper", async (req, res) => {
+  try {
+    const order = await Order.findOne({
+      "shipper.id_shipper": mongoose.Types.ObjectId(req.params.id_shipper),
+      status: ["Đã nhận", "Đang giao"],
+    });
+    if (order) {
+      res.send(order);
+    } else {
+      res.send({ isNotFound: true });
+    }
+  } catch (error) {
+    res.send({ isNotFound: true });
+  }
+});
+
 module.exports = app;

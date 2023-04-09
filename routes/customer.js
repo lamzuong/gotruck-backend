@@ -1,5 +1,6 @@
 const express = require("express");
 const Customer = require("../models/customer");
+const Order = require("../models/order");
 const app = express();
 
 app.get("/", async (req, res) => {
@@ -12,9 +13,24 @@ app.get("/", async (req, res) => {
 });
 app.get("/byId/:id", async (req, res) => {
   try {
-    const customer = await Customer.find({ id_cus: req.params.id });
-    res.send(customer[0]);
+    const customer = await Customer.findOne({ id_cus: req.params.id }).lean();
+    if (customer) {
+      const countCancel = await Order.find({
+        id_customer: customer._id,
+        status: "Đã hủy",
+      }).countDocuments();
+
+      const countCompleted = await Order.find({
+        id_customer: customer._id,
+        status: "Đã giao",
+      }).countDocuments();
+
+      customer.countCancel = countCancel;
+      customer.countCompleted = countCompleted;
+    }
+    res.send(customer);
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });

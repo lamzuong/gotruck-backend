@@ -26,6 +26,9 @@ const orderAdmin = require("./routes/orderAdmin");
 const customer = require("./routes/customer");
 const shipperAdmin = require("./routes/shipperAdmin");
 const policy = require("./routes/policy");
+const form = require("./routes/form");
+const radius = require("./routes/radius");
+const priceAdmin = require("./routes/priceAdmin");
 
 const bank = require("./routes/bank");
 const pageRegister = require("./routes/pageRegister");
@@ -47,6 +50,9 @@ app.use("/gotruck/orderAdmin", orderAdmin);
 app.use("/gotruck/customer", customer);
 app.use("/gotruck/shipperAdmin", shipperAdmin);
 app.use("/gotruck/policy", policy);
+app.use("/gotruck/form", form);
+app.use("/gotruck/radius", radius);
+app.use("/gotruck/priceadmin", priceAdmin);
 
 app.use("/gotruck/bank", bank);
 app.use("/gotruck/pageregister", pageRegister);

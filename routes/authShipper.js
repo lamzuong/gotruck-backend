@@ -54,12 +54,14 @@ app.get("/user/:phone", async (req, res) => {
         if (item.status === "Chưa duyệt" && item.default === false)
           truckSort.push(item);
       });
-      
+
       shipper.infoAllTruck = truckSort;
+    } else {
+      res.send({ notFound: true });
     }
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    res.send({ notFound: true });
   }
 });
 

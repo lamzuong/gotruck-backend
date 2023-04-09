@@ -4,6 +4,9 @@ const distanceReceiveOrderSchema = new mongoose.Schema(
     distance_receive_order: {
       type: Number,
     },
+    nameUserChange: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

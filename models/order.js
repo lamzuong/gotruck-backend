@@ -41,6 +41,18 @@ const orderSchema = new mongoose.Schema(
     },
     payer: {
       type: String,
+      enums: ["receive", "send"],
+    },
+    addressToOfShipper: {
+      address: {
+        type: String,
+      },
+      latitude: {
+        type: Number,
+      },
+      longitude: {
+        type: Number,
+      },
     },
     date_complete: {
       type: Date,

@@ -52,8 +52,8 @@ app.delete("/delete/:id", async (req, res) => {
 // get all truck type
 app.get("/trucktype", async (req, res) => {
   try {
-    const trucktype = await TruckType.find({});
-    trucktype.sort((a, b) => parseInt(a.name) - parseInt(b.name));
+    const trucktype = await TruckType.find({}).populate("createdBy");
+    trucktype.sort((a, b) => Number(a.name) - Number(b.name));
     res.send(trucktype);
   } catch (error) {
     res.status(500).send(error);
@@ -64,7 +64,7 @@ app.get("/trucktype/byname/:name", async (req, res) => {
   try {
     const trucktype = await TruckType.findOne({
       name: req.params.name,
-    });
+    }).populate("createdBy");
     res.send(trucktype);
   } catch (error) {
     res.status(500).send(error);
@@ -77,7 +77,8 @@ app.get("/trucktype/pagination", async (req, res) => {
     const truckType = await TruckType.find({})
       .sort({ name: 1 })
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit)
+      .populate("createdBy");
     res.send(truckType);
   } catch (error) {
     res.status(500).send(error);
