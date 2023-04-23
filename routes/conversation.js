@@ -90,6 +90,36 @@ app.post("/", async (req, res) => {
   }
 });
 
+app.get("/admin/conversation", async (req, res) => {
+  try {
+    const { id_cus, id_admin } = req.query;
+    const haveConversation = await Conversation.findOne({
+      id_customer: mongoose.Types.ObjectId(id_cus),
+      id_admin: mongoose.Types.ObjectId(id_admin),
+    })
+      .lean()
+      .populate("id_customer id_admin");
+    if (haveConversation) {
+      res.send(haveConversation);
+    } else {
+      const conversation = new Conversation({
+        id_customer: id_cus,
+        id_admin: id_admin,
+      });
+      await conversation.save();
+      const cvs = await Conversation.findOne({
+        id_customer: mongoose.Types.ObjectId(id_customer),
+        id_admin: mongoose.Types.ObjectId(id_admin),
+      })
+        .lean()
+        .populate("id_customer id_admin");
+      res.send(cvs);
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 app.get("/message/:id_conversation", async (req, res) => {
   try {
     const listMessage = await Message.find({

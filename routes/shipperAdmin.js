@@ -2,6 +2,7 @@ const express = require("express");
 const Shipper = require("../models/shipper");
 const TruckShipper = require("../models/truckShipper");
 const Order = require("../models/order");
+const TransactionHistory = require("../models/transactionHistory");
 
 const app = express();
 
@@ -115,11 +116,38 @@ app.put("/block/:idShipper", async (req, res) => {
 });
 
 app.put("/recharge/:idShipper", async (req, res) => {
-  const shipperSend = req.body;
+  const { shipperSend, id_handler } = req.body;
   const resp = await Shipper.find({ id_shipper: req.params.idShipper });
   const shipper = await Shipper.findByIdAndUpdate(resp[0]._id, {
     balance: shipperSend.balance,
   });
+
+  const trAdd = {
+    id_shipper: shipper._id,
+    money: shipperSend.balance - resp[0].balance,
+    status: "Đã xử lý",
+    type: "Nạp tiền",
+    id_handler: id_handler,
+  };
+
+  let date = new Date().getFullYear();
+  const checkHasTransactionHistory = await TransactionHistory.findOne(
+    {},
+    {},
+    { sort: { createdAt: -1 } }
+  );
+  if (checkHasTransactionHistory) {
+    let indexLastest = checkHasTransactionHistory.id_transaction_history;
+    let idNew =
+      parseInt((date % 100) + "" + indexLastest.slice(5, indexLastest.length)) +
+      1;
+    trAdd.id_transaction_history = "TSH" + idNew;
+  } else {
+    trAdd.id_transaction_history = "TSH" + (date % 100) + "00001";
+  }
+  const trsHtr = new TransactionHistory(trAdd);
+  await trsHtr.save();
+
   res.send(shipper);
 });
 

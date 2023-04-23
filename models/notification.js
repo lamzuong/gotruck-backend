@@ -1,14 +1,15 @@
 const mongoose = require("mongoose");
 const notificationSchema = new mongoose.Schema(
   {
-    id_user: {
+    id_notify: {
+      type: String,
+    },
+    id_receiver: {
       type: mongoose.Schema.Types.ObjectId,
-      require: true,
       refPath: "userModel",
     },
     userModel: {
       type: String,
-      required: true,
       enum: ["Customer", "Shipper"],
     },
     content: {
@@ -25,6 +26,10 @@ const notificationSchema = new mongoose.Schema(
     type_send: {
       type: String,
       enum: ["All", "AllCustomer", "AllShipper", "Specific"],
+    },
+    id_handler: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
     },
   },
   { timestamps: true }

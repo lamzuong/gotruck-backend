@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const truckShipperSchema = new mongoose.Schema(
   {
+    id_truck: {
+      type: String,
+    },
     id_shipper: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shipper",
@@ -22,7 +25,7 @@ const truckShipperSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["Chưa duyệt", "Đã duyệt"],
+      enum: ["Chưa duyệt", "Đã duyệt", "Từ chối"],
     },
     default: {
       type: Boolean,
@@ -31,6 +34,13 @@ const truckShipperSchema = new mongoose.Schema(
       type: Boolean,
     },
     list_vehicle_registration: [{ type: String }],
+    id_handler: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+    },
+    reason_cancel: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

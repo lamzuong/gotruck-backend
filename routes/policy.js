@@ -33,4 +33,21 @@ app.get("/byType/:type", async (req, res) => {
   }
 });
 
+app.get("/history/pagination", async (req, res) => {
+  try {
+    const { page, limit, type } = req.query;
+    const policy = await Policy.find(
+      { type: type },
+      {},
+      { sort: { createdAt: -1 } }
+    )
+      .populate("history.modifiedBy deletedBy")
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.send(policy);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = app;

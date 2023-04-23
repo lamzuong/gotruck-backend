@@ -7,13 +7,31 @@ const app = exprees();
 
 app.post("/vehicle", async (req, res) => {
   try {
+    const data = req.body;
     const checkExistTruck = await TruckShipper.find({
-      license_plate: req.body.license_plate,
+      license_plate: data.license_plate,
     });
     if (checkExistTruck.length > 0) {
       res.send({ isExist: true });
     } else {
-      const tr = new TruckShipper(req.body);
+      let date = new Date().getFullYear();
+      const checkHasTruck = await TruckShipper.findOne(
+        {},
+        {},
+        { sort: { createdAt: -1 } }
+      );
+      if (checkHasTruck) {
+        let indexLastest = checkHasTruck.id_truck;
+        let idNew =
+          parseInt(
+            (date % 100) + "" + indexLastest.slice(5, indexLastest.length)
+          ) + 1;
+        data.id_truck = "VHC" + idNew;
+      } else {
+        data.id_truck = "VHC" + (date % 100) + "00001";
+      }
+
+      const tr = new TruckShipper(data);
       await tr.save();
       res.send(tr);
     }

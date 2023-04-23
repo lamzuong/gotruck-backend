@@ -30,17 +30,36 @@ app.post("/", async (req, res) => {
 //add request withdraw
 app.post("/withdraw", async (req, res) => {
   try {
-    const shipper = await Shipper.findById(req.body.id_shipper).lean();
-    shipper.balance = Number(shipper.balance) - Number(req.body.money);
+    const data = req.body;
+    const shipper = await Shipper.findById(data.id_shipper).lean();
+    shipper.balance = Number(shipper.balance) - Number(data.money);
     const updateBalance = await Shipper.findByIdAndUpdate(
       shipper._id,
       shipper,
       { new: true }
     );
-    const trsHtr = new TransactionHistory(req.body);
+
+    let date = new Date().getFullYear();
+    const checkHasForm = await TransactionHistory.findOne(
+      {},
+      {},
+      { sort: { createdAt: -1 } }
+    );
+    if (checkHasForm) {
+      let indexLastest = checkHasForm.id_transaction_history;
+      let idNew =
+        parseInt(
+          (date % 100) + "" + indexLastest.slice(5, indexLastest.length)
+        ) + 1;
+      data.id_transaction_history = "TSH" + idNew;
+    } else {
+      data.id_transaction_history = "TSH" + (date % 100) + "00001";
+    }
+    const trsHtr = new TransactionHistory(data);
     await trsHtr.save();
     res.send(trsHtr);
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });

@@ -14,7 +14,8 @@ const conversation = require("./routes/conversation");
 const order = require("./routes/order");
 const profile = require("./routes/profile");
 const transportPrice = require("./routes/transportPrice");
-
+const notify = require("./routes/notify");
+const form = require("./routes/form");
 const authShipper = require("./routes/authShipper");
 const profileShipper = require("./routes/profileShipper");
 const orderShipper = require("./routes/orderShipper");
@@ -26,18 +27,25 @@ const orderAdmin = require("./routes/orderAdmin");
 const customer = require("./routes/customer");
 const shipperAdmin = require("./routes/shipperAdmin");
 const policy = require("./routes/policy");
-const form = require("./routes/form");
+const formRegister = require("./routes/formRegister");
 const radius = require("./routes/radius");
 const priceAdmin = require("./routes/priceAdmin");
+const formWithDraw = require("./routes/formWithDraw");
+const formVehicle = require("./routes/formVehicle");
+const formFeedback = require("./routes/formFeedBack");
 
 const bank = require("./routes/bank");
 const pageRegister = require("./routes/pageRegister");
+
+const dataDemo = require("./routes/datademo");
 
 app.use("/gotruck/auth", auth);
 app.use("/gotruck/conversation", conversation);
 app.use("/gotruck/order", order);
 app.use("/gotruck/profile", profile);
 app.use("/gotruck/transportPrice", transportPrice);
+app.use("/gotruck/notify", notify);
+app.use("/gotruck/form", form);
 
 app.use("/gotruck/authshipper", authShipper);
 app.use("/gotruck/profileshipper", profileShipper);
@@ -50,12 +58,17 @@ app.use("/gotruck/orderAdmin", orderAdmin);
 app.use("/gotruck/customer", customer);
 app.use("/gotruck/shipperAdmin", shipperAdmin);
 app.use("/gotruck/policy", policy);
-app.use("/gotruck/form", form);
+app.use("/gotruck/formregister", formRegister);
 app.use("/gotruck/radius", radius);
 app.use("/gotruck/priceadmin", priceAdmin);
+app.use("/gotruck/formwithdraw", formWithDraw);
+app.use("/gotruck/formvehicle", formVehicle);
+app.use("/gotruck/formfeedback", formFeedback);
 
 app.use("/gotruck/bank", bank);
 app.use("/gotruck/pageregister", pageRegister);
+
+app.use("/gotruck/datademo", dataDemo);
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);

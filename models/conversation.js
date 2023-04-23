@@ -9,9 +9,17 @@ const conversationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shipper",
     },
+    id_admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+    },
   },
   { timestamps: true }
 );
 
-const Conversation = mongoose.model("Conversation", conversationSchema, "conversation");
+const Conversation = mongoose.model(
+  "Conversation",
+  conversationSchema,
+  "conversation"
+);
 module.exports = Conversation;

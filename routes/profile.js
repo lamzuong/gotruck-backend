@@ -63,7 +63,7 @@ app.get("/feedback/:id_customer", async (req, res) => {
   try {
     const feedBack = await FeedBack.find(
       {
-        id_feedback: mongoose.Types.ObjectId(req.params.id_customer),
+        id_sender: mongoose.Types.ObjectId(req.params.id_customer),
       },
       {},
       { sort: { updatedAt: -1 } }
@@ -75,9 +75,31 @@ app.get("/feedback/:id_customer", async (req, res) => {
 });
 
 app.post("/feedback", async (req, res) => {
-  const feedBack = new FeedBack(req.body);
   try {
+    const data = req.body;
+
+    let date = new Date().getFullYear();
+    const checkHasFeedback = await FeedBack.findOne(
+      {},
+      {},
+      { sort: { createdAt: -1 } }
+    );
+    if (checkHasFeedback) {
+      let indexFeedBackLastest = checkHasFeedback.id_feedback;
+      let idFeedBackNew =
+        parseInt(
+          (date % 100) +
+            "" +
+            indexFeedBackLastest.slice(5, indexFeedBackLastest.length)
+        ) + 1;
+      data.id_feedback = "FFB" + idFeedBackNew;
+    } else {
+      data.id_feedback = "FFB" + (date % 100) + "00001";
+    }
+
+    const feedBack = new FeedBack(data);
     await feedBack.save();
+
     res.send(feedBack);
   } catch (error) {
     res.status(500).send(error);

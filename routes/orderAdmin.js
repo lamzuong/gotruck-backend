@@ -18,7 +18,7 @@ app.get("/pagination", async (req, res) => {
   try {
     const { page, limit, status } = req.query;
     let queryStr = status === "Tất cả" ? {} : { status };
-    const order = await Order.find(queryStr)
+    const order = await Order.find(queryStr, {}, { sort: { createdAt: -1 } })
       .populate("id_customer shipper.id_shipper shipper.truck")
       .skip((page - 1) * limit)
       .limit(limit);
@@ -74,7 +74,9 @@ app.get("/search", async (req, res) => {
     }
     if (idShipper !== "") {
       queryArr.push({
-        $match: { "shipper.id_shipper": { $regex: ".*" + idShipper + ".*" } },
+        $match: {
+          "shipper.id_shipper.id_shipper": { $regex: ".*" + idShipper + ".*" },
+        },
       });
     }
     if (idOrder !== "") {
@@ -86,7 +88,6 @@ app.get("/search", async (req, res) => {
       queryArr.push({ $skip: (page - 1) * limit });
       queryArr.push({ $limit: +limit });
     }
-
     const order = await Order.aggregate(queryArr);
     res.send(order);
   } catch (error) {

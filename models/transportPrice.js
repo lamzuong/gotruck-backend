@@ -12,10 +12,7 @@ const transportPriceSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
-    start_date: {
-      type: Date,
-    },
-    end_date: {
+    modifiedAt: {
       type: Date,
     },
   },

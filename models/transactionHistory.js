@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const transactionHistorySchema = new mongoose.Schema(
   {
+    id_transaction_history: {
+      type: String,
+    },
     id_shipper: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shipper",
@@ -25,6 +28,13 @@ const transactionHistorySchema = new mongoose.Schema(
     type: {
       type: String,
       enums: ["Rút tiền", "Nạp tiền"],
+    },
+    id_handler: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+    },
+    image_proof: {
+      type: String,
     },
   },
   { timestamps: true }

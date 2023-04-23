@@ -62,6 +62,7 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
+      enums: ["Chưa nhận", "Đã nhận", "Đang giao", "Đã giao", "Đã hủy"],
     },
     fee: {
       type: Number,

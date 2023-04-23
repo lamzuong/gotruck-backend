@@ -2,6 +2,7 @@ const exprees = require("express");
 const TruckType = require("../models/truckType");
 const Shipper = require("../models/shipper");
 const TruckShipper = require("../models/truckShipper");
+const FormRegister = require("../models/formRegister");
 const app = exprees();
 
 // get all truck type
@@ -18,23 +19,28 @@ app.get("/trucktype", async (req, res) => {
 //check exist phone of shipper and license_plate of truck
 // save shipper after save truck
 app.post("/register", async (req, res) => {
-  const truckPost = req.body.truck;
-  const shipperPost = req.body.shipper;
-
-  const checkUser = await Shipper.findOne({ phone: shipperPost.phone });
+  const shipperRegister = req.body;
+  const checkUser = await Shipper.findOne({ phone: shipperRegister.phone });
   const checkTruck = await TruckShipper.findOne({
-    license_plate: truckPost.license_plate,
+    license_plate: shipperRegister.license_plate,
+  });
+
+  const checkTruckInFormRegister = await FormRegister.findOne({
+    license_plate: shipperRegister.license_plate,
+  });
+  const checkUserInFormRegister = await FormRegister.findOne({
+    phone: shipperRegister.phone,
   });
 
   try {
-    if (checkTruck) {
+    if (checkTruck || checkTruckInFormRegister) {
       res.send({
         status: "error",
         message: "Phương tiện này đã được sử dụng bởi tài xế khác",
         data: {},
       });
     } else {
-      if (checkUser) {
+      if (checkUser || checkUserInFormRegister) {
         res.send({
           status: "error",
           message: "Số điện thoại đã được sử dụng bởi tài xế khác",
@@ -42,36 +48,25 @@ app.post("/register", async (req, res) => {
         });
       } else {
         let date = new Date().getFullYear();
-        const checkHasShipper = await Shipper.findOne(
+        const checkHasForm = await FormRegister.findOne(
           {},
           {},
           { sort: { createdAt: -1 } }
         );
-
-        if (checkHasShipper) {
-          let indexShpLastest = checkHasShipper.id_shipper;
-          let idShipperNew =
+        if (checkHasForm) {
+          let indexFormLastest = checkHasForm.id_form;
+          let idFormNew =
             parseInt(
               (date % 100) +
                 "" +
-                indexShpLastest.slice(5, indexShpLastest.length)
+                indexFormLastest.slice(5, indexFormLastest.length)
             ) + 1;
-          shipperPost.id_shipper = "SPR" + idShipperNew;
-
-          const shpNew = new Shipper(shipperPost);
-          await shpNew.save();
+          shipperRegister.id_form = "RGT" + idFormNew;
         } else {
-          shipperPost.id_shipper = "SPR" + (date % 100) + "00001";
-          const shpNew = new Shipper(shipperPost);
-          await shpNew.save();
+          shipperRegister.id_form = "RGT" + (date % 100) + "00001";
         }
-
-        const shipperNew = await Shipper.findOne({
-          id_shipper: shipperPost.id_shipper,
-        });
-        truckPost.id_shipper = shipperNew._id;
-        const tr = new TruckShipper(truckPost);
-        await tr.save();
+        const formNew = new FormRegister(shipperRegister);
+        await formNew.save();
 
         res.send({
           status: "ok",
@@ -81,6 +76,7 @@ app.post("/register", async (req, res) => {
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });
