@@ -88,10 +88,11 @@ app.get("/week", async (req, res) => {
 
 // get earning month
 app.get("/month", async (req, res) => {
+  var lastmonth = new Date();
+  lastmonth.setDate(lastmonth.getDate() - 29);
+
   var today = new Date();
   today.setDate(today.getDate() + 1);
-  var lastmonth = new Date();
-  lastmonth.setMonth(lastmonth.getMonth() - 1);
   try {
     const earning = await Order.find({
       updatedAt: {
@@ -133,10 +134,10 @@ app.get("/month", async (req, res) => {
 app.get("/specific", async (req, res) => {
   const { startDate, endDate } = req.query;
   var startDateTemp = new Date(startDate);
-  startDateTemp.setDate(startDateTemp.getDate() + 1);
+  startDateTemp.setDate(startDateTemp.getDate());
 
   var endDateTemp = new Date(endDate);
-  endDateTemp.setDate(endDateTemp.getDate() + 2);
+  endDateTemp.setDate(endDateTemp.getDate() + 1);
 
   let ms1Start = startDateTemp.getTime();
   let ms2End = endDateTemp.getTime();
@@ -154,27 +155,43 @@ app.get("/specific", async (req, res) => {
       },
       status: "Đã giao",
     });
-    let dataRes = { earnPerDay: [], total: 0 };
+
+    let dataRes = { earnPerDay: [], total: 0, earnPerHour: [] };
 
     for (let i = 0; i < earning.length; i++) {
       dataRes.total += (earning[i].total * earning[i].fee) / 100;
     }
 
-    for (let i = tempCalc; i > 0; i--) {
-      const dateTemp = earning.filter((item) => {
-        let ms1 = item.updatedAt.getTime();
-        let ms2 = endDateTemp.getTime();
-        let temp = Math.ceil((ms2 - ms1) / (24 * 60 * 60 * 1000));
-        if (temp - 1 == i) {
-          return item;
-        }
-      });
-      let subtotal = 0;
-      dateTemp.map((itemWeek) => {
-        subtotal += (itemWeek.total * itemWeek.fee) / 100;
-      });
+    if (startDate === endDate) {
+      for (let i = 0; i < 24; i++) {
+        const hour = earning.filter((item) => {
+          if (new Date(item.updatedAt).getHours() === i) {
+            return item;
+          }
+        });
+        let subtotal = 0;
+        hour.map((itemHour) => {
+          subtotal += (itemHour.total * itemHour.fee) / 100;
+        });
+        dataRes.earnPerHour.push(subtotal);
+      }
+    } else {
+      for (let i = tempCalc; i > 0; i--) {
+        const dateTemp = earning.filter((item) => {
+          let ms1 = item.updatedAt.getTime();
+          let ms2 = endDateTemp.getTime();
+          let temp = Math.ceil((ms2 - ms1) / (24 * 60 * 60 * 1000));
+          if (temp == i) {
+            return item;
+          }
+        });
+        let subtotal = 0;
+        dateTemp.map((itemWeek) => {
+          subtotal += (itemWeek.total * itemWeek.fee) / 100;
+        });
 
-      dataRes.earnPerDay.push(subtotal);
+        dataRes.earnPerDay.push(subtotal);
+      }
     }
     res.send(dataRes);
   } catch (error) {
