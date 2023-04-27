@@ -12,7 +12,7 @@ app.get("/id/:id_feedback", async (req, res) => {
   try {
     const idTemp = req.params.id_feedback;
     const feed_back = await FeedBack.findById(idTemp)
-      .populate("id_sender")
+      .populate("id_sender id_handler")
       .lean();
     res.status(200).send(feed_back);
   } catch (error) {
