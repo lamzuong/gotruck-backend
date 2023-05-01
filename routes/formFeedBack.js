@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const FormRegister = require("../models/formRegister");
 const TransactionHistory = require("../models/transactionHistory");
 const FeedBack = require("../models/feedBack");
+const Conversation = require("../models/conversation");
 
 app.get("/id/:id_feedback", async (req, res) => {
   try {
@@ -43,6 +44,12 @@ app.put("/", async (req, res) => {
           date_complete: new Date(),
         },
         { new: true }
+      );
+      await Conversation.findOneAndUpdate(
+        {
+          id_form: feed_back._id,
+        },
+        { disable: true }
       );
       res.status(200).send(feed_back);
     } else {

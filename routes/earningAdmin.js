@@ -107,8 +107,6 @@ app.get("/month", async (req, res) => {
     for (let i = 0; i < earning.length; i++) {
       dataRes.total += (earning[i].total * earning[i].fee) / 100;
     }
-    c;
-
     for (let i = 30; i > 0; --i) {
       const dateTemp = earning.filter((item) => {
         let ms1 = item.updatedAt.getTime();
@@ -128,6 +126,7 @@ app.get("/month", async (req, res) => {
     }
     res.send(dataRes);
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });

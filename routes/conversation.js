@@ -92,30 +92,30 @@ app.post("/", async (req, res) => {
 
 app.get("/admin/conversation", async (req, res) => {
   try {
-    const { id_cus, id_admin } = req.query;
+    const { id_form, form_model, id_customer, id_admin } = req.query;
     const haveConversation = await Conversation.findOne({
-      id_customer: mongoose.Types.ObjectId(id_cus),
-      id_admin: mongoose.Types.ObjectId(id_admin),
+      id_form: mongoose.Types.ObjectId(id_form),
     })
       .lean()
-      .populate("id_customer id_admin");
+      .populate("id_form id_customer id_admin");
     if (haveConversation) {
       res.send(haveConversation);
     } else {
       const conversation = new Conversation({
-        id_customer: id_cus,
+        id_form: id_form,
+        form_model: form_model,
+        id_customer: id_customer,
         id_admin: id_admin,
+        disable: false,
       });
       await conversation.save();
-      const cvs = await Conversation.findOne({
-        id_customer: mongoose.Types.ObjectId(id_customer),
-        id_admin: mongoose.Types.ObjectId(id_admin),
-      })
+      const cvs = await Conversation.findById(conversation._id)
         .lean()
-        .populate("id_customer id_admin");
+        .populate("id_form id_customer id_admin");
       res.send(cvs);
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });
@@ -139,6 +139,21 @@ app.post("/message", async (req, res) => {
     const mess = new Message(req.body);
     await mess.save();
     res.send(mess);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+app.put("/disable", async (req, res) => {
+  try {
+    const cvs = await Conversation.findById(
+      req.body.id_conversation,
+      {
+        disable: true,
+      },
+      { new: true }
+    );
+    res.send(cvs);
   } catch (error) {
     res.status(500).send(error);
   }
