@@ -4,7 +4,7 @@ const feeAppSchema = new mongoose.Schema(
     fee: {
       type: Number,
     },
-    dateCreate: {
+    dateEnd: {
       type: Date,
     },
     dateStart: {
@@ -12,6 +12,10 @@ const feeAppSchema = new mongoose.Schema(
     },
     content: {
       type: String,
+    },
+    modifyBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
     },
   },
   { timestamps: true }

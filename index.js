@@ -33,6 +33,7 @@ const priceAdmin = require("./routes/priceAdmin");
 const formWithDraw = require("./routes/formWithDraw");
 const formVehicle = require("./routes/formVehicle");
 const formFeedback = require("./routes/formFeedBack");
+const feeAdmin = require("./routes/feeAdmin");
 
 const bank = require("./routes/bank");
 const pageRegister = require("./routes/pageRegister");
@@ -64,6 +65,7 @@ app.use("/gotruck/priceadmin", priceAdmin);
 app.use("/gotruck/formwithdraw", formWithDraw);
 app.use("/gotruck/formvehicle", formVehicle);
 app.use("/gotruck/formfeedback", formFeedback);
+app.use("/gotruck/feeadmin", feeAdmin);
 
 app.use("/gotruck/bank", bank);
 app.use("/gotruck/pageregister", pageRegister);
