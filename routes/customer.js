@@ -5,7 +5,11 @@ const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const customer = await Customer.find({});
+    const customer = await Customer.find(
+      {},
+      {},
+      { sort: { last_active_date: -1 } }
+    );
     res.send(customer);
   } catch (error) {
     res.status(500).send(error);
@@ -43,7 +47,11 @@ app.get("/pagination", async (req, res) => {
         : status === "Đã khóa"
         ? { block: true }
         : { block: false };
-    const customer = await Customer.find(queryStr)
+    const customer = await Customer.find(
+      queryStr,
+      {},
+      { sort: { last_active_date: -1 } }
+    )
       .skip((page - 1) * limit)
       .limit(limit);
     res.send(customer);
@@ -53,7 +61,7 @@ app.get("/pagination", async (req, res) => {
 });
 app.get("/search", async (req, res) => {
   const { page, limit, idCustomer } = req.query;
-  const queryArr = [];
+  const queryArr = [{ $sort: { last_active_date: -1 } }];
   if (idCustomer !== "") {
     queryArr.push({
       $match: { id_cus: { $regex: ".*" + idCustomer + ".*" } },

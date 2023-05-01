@@ -35,6 +35,7 @@ app.put("/", async (req, res) => {
           status: "Từ chối",
           reason_cancel: data.reason_cancel,
           id_handler: id_handler,
+          approval_date: new Date(),
         },
         { new: true }
       );
@@ -56,6 +57,12 @@ app.put("/", async (req, res) => {
         block: false,
         cmnd: data.cmnd,
         balance: 0,
+        last_active_date: new Date(),
+        current_address: {
+          address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
+          latitude: 10.820685261169594,
+          longitude: 106.68763093650341,
+        },
       };
       const truckNew = {
         license_plate: data.license_plate,
@@ -120,6 +127,7 @@ app.put("/", async (req, res) => {
         {
           status: "Đã duyệt",
           id_handler: id_handler,
+          approval_date: new Date(),
         },
         { new: true }
       );
@@ -167,6 +175,7 @@ app.get("/search", async (req, res) => {
       },
       { $unwind: "$type_truck" },
       { $match: { status: "Chưa duyệt" } },
+      { $sort: { createdAt: -1 } },
     ];
     if (idForm !== "") {
       queryArr.push({
@@ -198,7 +207,7 @@ app.get("/history/pagination", async (req, res) => {
     const form = await FormRegister.find(
       statusQuery,
       {},
-      { sort: { createdAt: -1 } }
+      { $sort: { approval_date: -1 } }
     )
       .populate("type_truck id_handler")
       .skip((page - 1) * limit)
@@ -237,6 +246,7 @@ app.get("/history/search", async (req, res) => {
           $or: [{ status: "Đã duyệt" }, { status: "Từ chối" }],
         },
       },
+      { $sort: { approval_date: -1 } },
     ];
     if (idForm !== "") {
       queryArr.push({

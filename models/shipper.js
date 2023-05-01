@@ -52,6 +52,20 @@ const shipperSchema = new mongoose.Schema(
     reason_cancel: {
       type: String,
     },
+    last_active_date: {
+      type: Date,
+    },
+    current_address: {
+      address: {
+        type: String,
+      },
+      latitude: {
+        type: Number,
+      },
+      longitude: {
+        type: Number,
+      },
+    },
   },
   { timestamps: true }
 );

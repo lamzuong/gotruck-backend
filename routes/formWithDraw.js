@@ -35,6 +35,7 @@ app.put("/", async (req, res) => {
         status: data.status,
         id_handler: data.id_handler,
         image_proof: data.image_proof,
+        approval_date: new Date(),
       },
       { new: true }
     );
@@ -83,6 +84,7 @@ app.get("/search", async (req, res) => {
     },
     { $unwind: "$id_bank" },
     { $match: { status: "Đang xử lý" } },
+    { $sort: { createdAt: -1 } },
   ];
   if (idTransactionHistory !== "") {
     queryArr.push({
@@ -106,7 +108,7 @@ app.get("/history/pagination", async (req, res) => {
     const shipper = await TransactionHistory.find(
       { status: "Đã xử lý", type: "Rút tiền" },
       {},
-      { sort: { createdAt: -1 } }
+      { sort: { approval_date: -1 } }
     )
       .populate("id_shipper id_bank id_handler")
       .skip((page - 1) * limit)
@@ -151,6 +153,7 @@ app.get("/history/search", async (req, res) => {
       { $unwind: "$id_handler" },
       { $match: { status: "Đã xử lý" } },
       { $match: { type: "Rút tiền" } },
+      { $sort: { approval_date: -1 } },
     ];
     if (idTransactionHistory !== "") {
       queryArr.push({

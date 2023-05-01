@@ -27,6 +27,12 @@ const feedBackSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
     },
+    date_receive: {
+      type: Date,
+    },
+    date_complete: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

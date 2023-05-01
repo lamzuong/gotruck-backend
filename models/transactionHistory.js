@@ -36,6 +36,9 @@ const transactionHistorySchema = new mongoose.Schema(
     image_proof: {
       type: String,
     },
+    approval_date: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

@@ -23,15 +23,31 @@ app.get("/id/:id_feedback", async (req, res) => {
 app.put("/", async (req, res) => {
   try {
     const data = req.body;
-    const feed_back = await FeedBack.findByIdAndUpdate(
-      data._id,
-      {
-        status: data.status,
-        id_handler: data.id_handler,
-      },
-      { new: true }
-    );
-    res.status(200).send(feed_back);
+    if (data.status === "Đã tiếp nhận") {
+      const feed_back = await FeedBack.findByIdAndUpdate(
+        data._id,
+        {
+          status: data.status,
+          id_handler: data.id_handler,
+          date_receive: new Date(),
+        },
+        { new: true }
+      );
+      res.status(200).send(feed_back);
+    } else if (data.status === "Đã xong") {
+      const feed_back = await FeedBack.findByIdAndUpdate(
+        data._id,
+        {
+          status: data.status,
+          id_handler: data.id_handler,
+          date_complete: new Date(),
+        },
+        { new: true }
+      );
+      res.status(200).send(feed_back);
+    } else {
+      res.status(200).send({ data: "ok" });
+    }
   } catch (error) {
     res.status(500).send(error);
   }
@@ -68,7 +84,8 @@ app.get("/pagination", async (req, res) => {
           as: "id_sender",
         },
       },
-      { $unwind: "$id_sender" }
+      { $unwind: "$id_sender" },
+      { $sort: { createdAt: -1 } }
     );
     if (page) {
       queryArr.push({ $skip: (page - 1) * limit });
@@ -103,6 +120,7 @@ app.get("/search", async (req, res) => {
           $or: [{ status: "Đã gửi" }, { status: "Đã tiếp nhận" }],
         },
       },
+      { $sort: { createdAt: -1 } },
     ];
     if (idFeedback !== "") {
       queryArr.push({
@@ -146,7 +164,8 @@ app.get("/history/pagination", async (req, res) => {
           as: "id_handler",
         },
       },
-      { $unwind: "$id_handler" }
+      { $unwind: "$id_handler" },
+      { $sort: { date_complete: -1 } }
     );
     if (page) {
       queryArr.push({ $skip: (page - 1) * limit });
@@ -185,6 +204,7 @@ app.get("/history/search", async (req, res) => {
       },
       { $unwind: "$id_handler" },
       { $match: { status: "Đã xong" } },
+      { $sort: { date_complete: -1 } },
     ];
     if (idFeedback !== "") {
       queryArr.push({

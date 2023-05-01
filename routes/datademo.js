@@ -9,6 +9,9 @@ const TransactionHistory = require("../models/transactionHistory");
 const FeedBack = require("../models/feedBack");
 const Order = require("../models/order");
 
+const idShipperDemo = "644f4709f175b904f488a2d7";
+const idTruckShipperDemo = "644f4709f175b904f488a2db";
+const idCustomerDemo = "";
 app.get("/shipperdemo", async (req, res) => {
   try {
     for (let i = 0; i < 10; i++) {
@@ -24,6 +27,12 @@ app.get("/shipperdemo", async (req, res) => {
         block: false,
         cmnd: "12345678" + i,
         balance: 100000 * i,
+        last_active_date: new Date(),
+        current_address: {
+          address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
+          latitude: 10.820685261169594,
+          longitude: 106.68763093650341,
+        },
       };
       const truckNew = {
         license_plate: "44K.1234" + i,
@@ -211,7 +220,7 @@ app.get("/withdraw", async (req, res) => {
   try {
     for (let index = 0; index < 25; index++) {
       const data = {
-        id_shipper: "6439f2668d7fc50f4ba74a87",
+        id_shipper: idShipperDemo,
         money: "123789",
         id_bank: "6415d600aae2f23c4c2788b5",
         account_number: 2143876543,
@@ -258,7 +267,7 @@ app.get("/vehicle", async (req, res) => {
     for (let i = 0; i < 25; i++) {
       const data = {
         license_plate: i < 10 ? "27T.1234" + i : "27T.233" + i,
-        id_shipper: "6439f2668d7fc50f4ba74a87",
+        id_shipper: idShipperDemo,
         name: "demo truck" + i,
         type_truck: "64340fb7403c61857add126e",
         list_image_info: [
@@ -357,250 +366,250 @@ app.get("/feedback", async (req, res) => {
 app.get("/orderdemo", async (req, res) => {
   try {
     // Chưa nhận
-    // for (let i = 1; i < 15; i++) {
-    //   const data = {
-    //     id_order: "ODR230000" + i,
-    //     id_customer: "63f786dd27c666036e4e7193",
-    //     payer: "send",
-    //     from_address: {
-    //       address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
-    //       latitude: 10.820685261169594,
-    //       longitude: 106.68763093650341,
-    //       name: "Quoc",
-    //       phone: "092364334532",
-    //     },
-    //     to_address: {
-    //       address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
-    //       latitude: 10.890244509604937,
-    //       longitude: 106.7674527621348,
-    //       name: "fdfsdfs",
-    //       phone: "098763453454",
-    //     },
-    //     fee: 10,
-    //     note: "nádasdas",
-    //     status: "Chưa nhận",
-    //     date_create: new Date(),
-    //     distance: Number(13.4),
-    //     total: Number(2894400),
-    //     expectedTime: Number(18),
-    //     good_type: "Nội thất",
-    //     truck_type: 20,
-    //     list_image_from: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //   };
-    //   const order = new Order(data);
-    //   await order.save();
-    // }
+    for (let i = 1; i < 15; i++) {
+      const data = {
+        id_order: "ODR230000" + i,
+        id_customer: "63f786dd27c666036e4e7193",
+        payer: "send",
+        from_address: {
+          address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
+          latitude: 10.820685261169594,
+          longitude: 106.68763093650341,
+          name: "Quoc",
+          phone: "092364334532",
+        },
+        to_address: {
+          address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
+          latitude: 10.890244509604937,
+          longitude: 106.7674527621348,
+          name: "fdfsdfs",
+          phone: "098763453454",
+        },
+        fee: 10,
+        note: "nádasdas",
+        status: "Chưa nhận",
+        date_create: new Date(),
+        distance: Number(13.4),
+        total: Number(2894400),
+        expectedTime: Number(18),
+        good_type: "Nội thất",
+        truck_type: 20,
+        list_image_from: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+      };
+      const order = new Order(data);
+      await order.save();
+    }
 
     // Đã nhận
-    // for (let i = 15; i < 30; i++) {
-    //   const data = {
-    //     id_order: "ODR23000" + i,
-    //     id_customer: "63f786dd27c666036e4e7193",
-    //     payer: "send",
-    //     from_address: {
-    //       address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
-    //       latitude: 10.820685261169594,
-    //       longitude: 106.68763093650341,
-    //       name: "Quoc",
-    //       phone: "092364334532",
-    //     },
-    //     to_address: {
-    //       address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
-    //       latitude: 10.890244509604937,
-    //       longitude: 106.7674527621348,
-    //       name: "fdfsdfs",
-    //       phone: "098763453454",
-    //     },
-    //     fee: 10,
-    //     note: "nádasdas",
-    //     status: "Đã nhận",
-    //     date_create: new Date(),
-    //     distance: Number(13.4),
-    //     total: Number(2894400),
-    //     expectedTime: Number(18),
-    //     good_type: "Nội thất",
-    //     truck_type: 20,
-    //     list_image_from: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     shipper: {
-    //       id_shipper: "6439f2668d7fc50f4ba74a87",
-    //       truck: "643a0a17a3ad43497f0907c0",
-    //     },
-    //   };
-    //   const order = new Order(data);
-    //   await order.save();
-    // }
+    for (let i = 15; i < 30; i++) {
+      const data = {
+        id_order: "ODR23000" + i,
+        id_customer: "63f786dd27c666036e4e7193",
+        payer: "send",
+        from_address: {
+          address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
+          latitude: 10.820685261169594,
+          longitude: 106.68763093650341,
+          name: "Quoc",
+          phone: "092364334532",
+        },
+        to_address: {
+          address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
+          latitude: 10.890244509604937,
+          longitude: 106.7674527621348,
+          name: "fdfsdfs",
+          phone: "098763453454",
+        },
+        fee: 10,
+        note: "nádasdas",
+        status: "Đã nhận",
+        date_create: new Date(),
+        distance: Number(13.4),
+        total: Number(2894400),
+        expectedTime: Number(18),
+        good_type: "Nội thất",
+        truck_type: 20,
+        list_image_from: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        shipper: {
+          id_shipper: idShipperDemo,
+          truck: idTruckShipperDemo,
+        },
+      };
+      const order = new Order(data);
+      await order.save();
+    }
 
-    //Đang giao
-    // for (let i = 30; i < 45; i++) {
-    //   const data = {
-    //     id_order: "ODR23000" + i,
-    //     id_customer: "63f786dd27c666036e4e7193",
-    //     payer: "send",
-    //     from_address: {
-    //       address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
-    //       latitude: 10.820685261169594,
-    //       longitude: 106.68763093650341,
-    //       name: "Quoc",
-    //       phone: "092364334532",
-    //     },
-    //     to_address: {
-    //       address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
-    //       latitude: 10.890244509604937,
-    //       longitude: 106.7674527621348,
-    //       name: "fdfsdfs",
-    //       phone: "098763453454",
-    //     },
-    //     fee: 10,
-    //     note: "nádasdas",
-    //     status: "Đang giao",
-    //     date_create: new Date(),
-    //     distance: Number(13.4),
-    //     total: Number(2894400),
-    //     expectedTime: Number(18),
-    //     good_type: "Nội thất",
-    //     truck_type: 20,
-    //     list_image_from: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     shipper: {
-    //       id_shipper: "6439f2668d7fc50f4ba74a87",
-    //       truck: "643a0a17a3ad43497f0907c0",
-    //     },
-    //     list_image_from_of_shipper: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //   };
-    //   const order = new Order(data);
-    //   await order.save();
-    // }
+    // Đang giao
+    for (let i = 30; i < 45; i++) {
+      const data = {
+        id_order: "ODR23000" + i,
+        id_customer: "63f786dd27c666036e4e7193",
+        payer: "send",
+        from_address: {
+          address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
+          latitude: 10.820685261169594,
+          longitude: 106.68763093650341,
+          name: "Quoc",
+          phone: "092364334532",
+        },
+        to_address: {
+          address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
+          latitude: 10.890244509604937,
+          longitude: 106.7674527621348,
+          name: "fdfsdfs",
+          phone: "098763453454",
+        },
+        fee: 10,
+        note: "nádasdas",
+        status: "Đang giao",
+        date_create: new Date(),
+        distance: Number(13.4),
+        total: Number(2894400),
+        expectedTime: Number(18),
+        good_type: "Nội thất",
+        truck_type: 20,
+        list_image_from: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        shipper: {
+          id_shipper: idShipperDemo,
+          truck: idTruckShipperDemo,
+        },
+        list_image_from_of_shipper: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+      };
+      const order = new Order(data);
+      await order.save();
+    }
 
-    //Đã giao
-    // for (let i =45; i <60; i++) {
-    //   const data = {
-    //     id_order: "ODR23000" + i,
-    //     id_customer: "63f786dd27c666036e4e7193",
-    //     payer: "send",
-    //     from_address: {
-    //       address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
-    //       latitude: 10.820685261169594,
-    //       longitude: 106.68763093650341,
-    //       name: "Quoc",
-    //       phone: "092364334532",
-    //     },
-    //     to_address: {
-    //       address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
-    //       latitude: 10.890244509604937,
-    //       longitude: 106.7674527621348,
-    //       name: "fdfsdfs",
-    //       phone: "098763453454",
-    //     },
-    //     fee: 10,
-    //     note: "nádasdas",
-    //     status: "Đã giao",
-    //     date_create: new Date(),
-    //     distance: Number(13.4),
-    //     total: Number(2894400),
-    //     expectedTime: Number(18),
-    //     good_type: "Nội thất",
-    //     truck_type: 20,
-    //     list_image_from: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     shipper: {
-    //       id_shipper: "6439f2668d7fc50f4ba74a87",
-    //       truck: "643a0a17a3ad43497f0907c0",
-    //     },
-    //     list_image_from_of_shipper: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     list_image_to_of_shipper: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     rate_shipper: {
-    //       content: "cvbcvbcvb",
-    //       star: 5,
-    //       time: new Date(),
-    //     },
-    //     addressToOfShipper: {
-    //       address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
-    //       latitude: 10.890244509604937,
-    //       longitude: 106.7674527621348,
-    //       name: "fdfsdfs",
-    //       phone: "098763453454",
-    //     },
-    //   };
+    // Đã giao
+    for (let i = 45; i < 60; i++) {
+      const data = {
+        id_order: "ODR23000" + i,
+        id_customer: "63f786dd27c666036e4e7193",
+        payer: "send",
+        from_address: {
+          address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
+          latitude: 10.820685261169594,
+          longitude: 106.68763093650341,
+          name: "Quoc",
+          phone: "092364334532",
+        },
+        to_address: {
+          address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
+          latitude: 10.890244509604937,
+          longitude: 106.7674527621348,
+          name: "fdfsdfs",
+          phone: "098763453454",
+        },
+        fee: 10,
+        note: "nádasdas",
+        status: "Đã giao",
+        date_create: new Date(),
+        distance: Number(13.4),
+        total: Number(2894400),
+        expectedTime: Number(18),
+        good_type: "Nội thất",
+        truck_type: 20,
+        list_image_from: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        shipper: {
+          id_shipper: idShipperDemo,
+          truck: idTruckShipperDemo,
+        },
+        list_image_from_of_shipper: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        list_image_to_of_shipper: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        rate_shipper: {
+          content: "cvbcvbcvb",
+          star: 5,
+          time: new Date(),
+        },
+        addressToOfShipper: {
+          address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
+          latitude: 10.890244509604937,
+          longitude: 106.7674527621348,
+          name: "fdfsdfs",
+          phone: "098763453454",
+        },
+      };
 
-    //   const order = new Order(data);
-    //   await order.save();
-    // }
+      const order = new Order(data);
+      await order.save();
+    }
 
-    //Đã hủy
-    // for (let i = 60; i < 75; i++) {
-    //   const data = {
-    //     id_order: "ODR23000" + i,
-    //     id_customer: "63f786dd27c666036e4e7193",
-    //     payer: "send",
-    //     from_address: {
-    //       address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
-    //       latitude: 10.820685261169594,
-    //       longitude: 106.68763093650341,
-    //       name: "Quoc",
-    //       phone: "092364334532",
-    //     },
-    //     to_address: {
-    //       address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
-    //       latitude: 10.890244509604937,
-    //       longitude: 106.7674527621348,
-    //       name: "fdfsdfs",
-    //       phone: "098763453454",
-    //     },
-    //     fee: 10,
-    //     note: "nádasdas",
-    //     status: "Đã hủy",
-    //     date_create: new Date(),
-    //     distance: Number(13.4),
-    //     total: Number(2894400),
-    //     expectedTime: Number(18),
-    //     good_type: "Nội thất",
-    //     truck_type: 20,
-    //     list_image_from: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     shipper: {
-    //       id_shipper: "6439f2668d7fc50f4ba74a87",
-    //       truck: "643a0a17a3ad43497f0907c0",
-    //     },
-    //     list_image_from_of_shipper: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     list_image_to_of_shipper: [
-    //       "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
-    //     ],
-    //     rate_shipper: {
-    //       content: "cvbcvbcvb",
-    //       star: 5,
-    //       time: new Date(),
-    //     },
-    //     addressToOfShipper: {
-    //       address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
-    //       latitude: 10.890244509604937,
-    //       longitude: 106.7674527621348,
-    //       name: "fdfsdfs",
-    //       phone: "098763453454",
-    //     },
-    //     reason_cancel: {
-    //       user_cancel: "AutoDelete",
-    //       content: "huy",
-    //       date_cancel: new Date(),
-    //     },
-    //   };
-    //   const order = new Order(data);
-    //   await order.save();
-    // }
+    // Đã hủy
+    for (let i = 60; i < 75; i++) {
+      const data = {
+        id_order: "ODR23000" + i,
+        id_customer: "63f786dd27c666036e4e7193",
+        payer: "send",
+        from_address: {
+          address: "RMCQ+72W, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh, Vietnam",
+          latitude: 10.820685261169594,
+          longitude: 106.68763093650341,
+          name: "Quoc",
+          phone: "092364334532",
+        },
+        to_address: {
+          address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
+          latitude: 10.890244509604937,
+          longitude: 106.7674527621348,
+          name: "fdfsdfs",
+          phone: "098763453454",
+        },
+        fee: 10,
+        note: "nádasdas",
+        status: "Đã hủy",
+        date_create: new Date(),
+        distance: Number(13.4),
+        total: Number(2894400),
+        expectedTime: Number(18),
+        good_type: "Nội thất",
+        truck_type: 20,
+        list_image_from: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        shipper: {
+          id_shipper: idShipperDemo,
+          truck: idTruckShipperDemo,
+        },
+        list_image_from_of_shipper: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        list_image_to_of_shipper: [
+          "https://firebasestorage.googleapis.com/v0/b/kltn-5be2b.appspot.com/o/36863895-9eaa-7c93-398a-167d5f5301d6?alt=media&token=8f6bb608-4fd8-42b5-896f-535c532be6e4",
+        ],
+        rate_shipper: {
+          content: "cvbcvbcvb",
+          star: 5,
+          time: new Date(),
+        },
+        addressToOfShipper: {
+          address: "58/5K Truông Tre, Linh Xuân, Thủ Đức, Bình Dương, Việt Nam",
+          latitude: 10.890244509604937,
+          longitude: 106.7674527621348,
+          name: "fdfsdfs",
+          phone: "098763453454",
+        },
+        reason_cancel: {
+          user_cancel: "AutoDelete",
+          content: "huy",
+          date_cancel: new Date(),
+        },
+      };
+      const order = new Order(data);
+      await order.save();
+    }
 
     res.send({
       status: "ok",

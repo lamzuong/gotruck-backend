@@ -41,6 +41,9 @@ const truckShipperSchema = new mongoose.Schema(
     reason_cancel: {
       type: String,
     },
+    approval_date: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

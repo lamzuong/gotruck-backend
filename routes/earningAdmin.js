@@ -48,6 +48,7 @@ app.get("/today", async (req, res) => {
 app.get("/week", async (req, res) => {
   var today = new Date();
   today.setDate(today.getDate() + 1);
+
   var lastweek = new Date();
   lastweek.setDate(lastweek.getDate() - 6);
   try {
@@ -106,13 +107,14 @@ app.get("/month", async (req, res) => {
     for (let i = 0; i < earning.length; i++) {
       dataRes.total += (earning[i].total * earning[i].fee) / 100;
     }
+    c;
 
-    for (let i = 30; i > 0; i--) {
+    for (let i = 30; i > 0; --i) {
       const dateTemp = earning.filter((item) => {
         let ms1 = item.updatedAt.getTime();
-        let ms2 = today.getTime();
+        let ms2 = new Date().getTime();
         let temp = Math.ceil((ms2 - ms1) / (24 * 60 * 60 * 1000));
-        if (temp - 1 == i) {
+        if (temp == i) {
           return item;
         }
       });

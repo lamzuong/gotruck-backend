@@ -45,10 +45,13 @@ const formRegisterSchema = new mongoose.Schema(
     name_truck: {
       type: String,
     },
-    id_handler:{
+    id_handler: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
-    }
+    },
+    approval_date: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

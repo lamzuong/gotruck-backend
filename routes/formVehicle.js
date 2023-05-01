@@ -35,6 +35,7 @@ app.put("/", async (req, res) => {
           status: "Từ chối",
           reason_cancel: data.reason_cancel,
           id_handler: id_handler,
+          approval_date: new Date(),
         },
         { new: true }
       );
@@ -50,6 +51,7 @@ app.put("/", async (req, res) => {
         {
           status: "Đã duyệt",
           id_handler: id_handler,
+          approval_date: new Date(),
         },
         { new: true }
       );
@@ -105,6 +107,7 @@ app.get("/search", async (req, res) => {
     },
     { $unwind: "$id_shipper" },
     { $match: { status: "Chưa duyệt" } },
+    { $sort: { createdAt: -1 } },
   ];
   if (idTruck !== "") {
     queryArr.push({
@@ -129,11 +132,11 @@ app.get("/history/pagination", async (req, res) => {
             $or: [{ status: "Đã duyệt" }, { status: "Từ chối" }],
             id_handler: { $ne: null },
           }
-        : { status: status, id_handler: { $ne: null }  };
+        : { status: status, id_handler: { $ne: null } };
     const shipper = await TruckShipper.find(
       statusQuery,
       {},
-      { sort: { createdAt: -1 } }
+      { sort: { approval_date: -1 } }
     )
       .populate("id_shipper type_truck id_handler")
       .skip((page - 1) * limit)
@@ -179,6 +182,7 @@ app.get("/history/search", async (req, res) => {
         $or: [{ status: "Đã duyệt" }, { status: "Từ chối" }],
       },
     },
+    { $sort: { approval_date: -1 } },
   ];
   if (idTruck !== "") {
     queryArr.push({

@@ -8,7 +8,11 @@ const app = express();
 
 app.get("/", async (req, res) => {
   try {
-    const shipper = await Shipper.find({ status: "Đã duyệt" });
+    const shipper = await Shipper.find(
+      { status: "Đã duyệt" },
+      {},
+      { sort: { last_active_date: -1 } }
+    );
     res.send(shipper);
   } catch (error) {
     res.status(500).send(error);
@@ -48,11 +52,11 @@ app.get("/byId/:id", async (req, res) => {
       const countCompleted = await Order.find({
         "shipper.id_shipper": shipper._id,
         status: "Đã giao",
-      }).countDocuments();
+      });
 
       let sum = 0;
       let avg = 0;
-      if (countCompleted) {
+      if (countCompleted.length > 0) {
         for (const a of countCompleted) {
           if (a.rate_shipper) {
             sum += a.rate_shipper.star;
@@ -60,7 +64,6 @@ app.get("/byId/:id", async (req, res) => {
         }
         svg = sum / countCompleted.length;
       }
-
       shipper.countCancel = countCancel?.length;
       shipper.countCompleted = countCompleted?.length;
       shipper.rateShipper = avg;
@@ -82,7 +85,11 @@ app.get("/pagination", async (req, res) => {
         : status === "Đã khóa"
         ? { block: true, status: "Đã duyệt" }
         : { block: false, status: "Đã duyệt" };
-    const shipper = await Shipper.find(queryStr)
+    const shipper = await Shipper.find(
+      queryStr,
+      {},
+      { sort: { last_active_date: -1 } }
+    )
       .skip((page - 1) * limit)
       .limit(limit);
     res.send(shipper);
@@ -92,7 +99,10 @@ app.get("/pagination", async (req, res) => {
 });
 app.get("/search", async (req, res) => {
   const { page, limit, idShipper } = req.query;
-  const queryArr = [{ $match: { status: "Đã duyệt" } }];
+  const queryArr = [
+    { $match: { status: "Đã duyệt" } },
+    { $sort: { last_active_date: -1 } },
+  ];
   if (idShipper !== "") {
     queryArr.push({
       $match: { id_shipper: { $regex: ".*" + idShipper + ".*" } },
@@ -128,6 +138,7 @@ app.put("/recharge/:idShipper", async (req, res) => {
     status: "Đã xử lý",
     type: "Nạp tiền",
     id_handler: id_handler,
+    approval_date: new Date(),
   };
 
   let date = new Date().getFullYear();
