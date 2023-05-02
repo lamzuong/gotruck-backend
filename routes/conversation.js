@@ -69,7 +69,6 @@ app.get("/shipper/:id_shipper", async (req, res) => {
 
 app.post("/", async (req, res) => {
   try {
-    console.log(req.body);
     const haveConversation = await Conversation.findOne({
       id_customer: mongoose.Types.ObjectId(req.body.id_customer),
       id_shipper: mongoose.Types.ObjectId(req.body.id_shipper),

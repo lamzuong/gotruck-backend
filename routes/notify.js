@@ -83,4 +83,56 @@ app.post("/", async (req, res) => {
   }
 });
 
+app.get("/customer/:id_customer", async (req, res) => {
+  try {
+    const { id_customer } = req.params;
+    const notification = await Notification.find(
+      {
+        $or: [
+          { type_send: "All" },
+          { type_send: "AllCustomer" },
+          { type_send: "Specific", id_receiver: id_customer },
+        ],
+      },
+      {},
+      { sort: { createdAt: -1 } }
+    ).populate("id_handler id_receiver");
+
+    if (notification.length > 0) {
+      res.send(notification);
+    } else {
+      res.send({ isNotFound: true });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.get("/shipper/:id_shipper", async (req, res) => {
+  try {
+    const { id_shipper } = req.params;
+    const notification = await Notification.find(
+      {
+        $or: [
+          { type_send: "All" },
+          { type_send: "AllShipper" },
+          { type_send: "Specific", id_receiver: id_shipper },
+        ],
+      },
+      {},
+      { sort: { createdAt: -1 } }
+    ).populate("id_handler id_receiver");
+
+    if (notification.length > 0) {
+      res.send(notification);
+    } else {
+      res.send({ isNotFound: true });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
 module.exports = app;

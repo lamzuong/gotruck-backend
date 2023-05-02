@@ -54,4 +54,30 @@ app.get("/history/pagination", async (req, res) => {
   }
 });
 
+app.get("/customer/:type", async (req, res) => {
+  try {
+    const policy = await Policy.find({
+      type: req.params.type,
+      hide: false,
+    }).populate("history.modifiedBy deletedBy");
+    res.send(policy);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.get("/shipper/:type", async (req, res) => {
+  try {
+    const policy = await Policy.find({
+      type: req.params.type,
+      hide: false,
+    }).populate("history.modifiedBy deletedBy");
+    res.send(policy);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
 module.exports = app;
