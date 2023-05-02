@@ -21,7 +21,7 @@ app.get("/", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -47,7 +47,7 @@ app.put("/", async (req, res) => {
     res.send(feeApp);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

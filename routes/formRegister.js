@@ -21,7 +21,8 @@ app.get("/", async (req, res) => {
       res.send({ isNotFound: true });
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -140,7 +141,7 @@ app.put("/", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -157,7 +158,8 @@ app.get("/pagination", async (req, res) => {
       .limit(limit);
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -191,7 +193,7 @@ app.get("/search", async (req, res) => {
     res.send(resForms);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -215,7 +217,7 @@ app.get("/history/pagination", async (req, res) => {
     res.send(form);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -261,7 +263,7 @@ app.get("/history/search", async (req, res) => {
     res.send(resForms);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

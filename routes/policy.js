@@ -8,7 +8,8 @@ app.post("/", async (req, res) => {
     await policy.save();
     res.send(policy);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.put("/", async (req, res) => {
@@ -19,7 +20,8 @@ app.put("/", async (req, res) => {
     );
     res.send(policy);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/byType/:type", async (req, res) => {
@@ -29,7 +31,8 @@ app.get("/byType/:type", async (req, res) => {
     );
     res.send(policy);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -46,7 +49,8 @@ app.get("/history/pagination", async (req, res) => {
       .limit(limit);
     res.send(policy);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

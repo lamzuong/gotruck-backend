@@ -31,7 +31,7 @@ app.get("/", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -79,7 +79,7 @@ app.post("/", async (req, res) => {
     res.send(notify);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

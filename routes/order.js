@@ -8,7 +8,8 @@ app.get("/", async (req, res) => {
   try {
     res.send("Api order onready");
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -21,7 +22,8 @@ app.get("/notshipper/order", async (req, res) => {
     );
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -37,7 +39,8 @@ app.get("/user/:id_user", async (req, res) => {
 
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -68,7 +71,8 @@ app.post("/", async (req, res) => {
       res.send(order);
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -79,7 +83,8 @@ app.put("/", async (req, res) => {
     });
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -89,7 +94,8 @@ app.get("/feeapp", async (req, res) => {
     fee_app.sort((a, b) => b.dateStart.getTime() - a.dateStart.getTime());
     res.send(fee_app[0]);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -99,7 +105,8 @@ app.post("/feeapp", async (req, res) => {
     await feeapp.save();
     res.send(feeapp);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -115,7 +122,8 @@ app.post("/review", async (req, res) => {
     );
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

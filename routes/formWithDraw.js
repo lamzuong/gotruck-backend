@@ -22,7 +22,8 @@ app.get("/", async (req, res) => {
       res.send({ isNotFound: true });
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -41,7 +42,8 @@ app.put("/", async (req, res) => {
     );
     res.status(200).send(transaction_history);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -58,48 +60,55 @@ app.get("/pagination", async (req, res) => {
       .limit(limit);
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
 app.get("/search", async (req, res) => {
-  const { page, limit, idTransactionHistory } = req.query;
-  const queryArr = [
-    {
-      $lookup: {
-        from: "shipper",
-        localField: "id_shipper",
-        foreignField: "_id",
-        as: "id_shipper",
+  try {
+    const { page, limit, idTransactionHistory } = req.query;
+    const queryArr = [
+      {
+        $lookup: {
+          from: "shipper",
+          localField: "id_shipper",
+          foreignField: "_id",
+          as: "id_shipper",
+        },
       },
-    },
-    { $unwind: "$id_shipper" },
-    {
-      $lookup: {
-        from: "bank",
-        localField: "id_bank",
-        foreignField: "_id",
-        as: "id_bank",
+      { $unwind: "$id_shipper" },
+      {
+        $lookup: {
+          from: "bank",
+          localField: "id_bank",
+          foreignField: "_id",
+          as: "id_bank",
+        },
       },
-    },
-    { $unwind: "$id_bank" },
-    { $match: { status: "Đang xử lý" } },
-    { $sort: { createdAt: -1 } },
-  ];
-  if (idTransactionHistory !== "") {
-    queryArr.push({
-      $match: {
-        id_transaction_history: { $regex: ".*" + idTransactionHistory + ".*" },
-      },
-    });
+      { $unwind: "$id_bank" },
+      { $match: { status: "Đang xử lý" } },
+      { $sort: { createdAt: -1 } },
+    ];
+    if (idTransactionHistory !== "") {
+      queryArr.push({
+        $match: {
+          id_transaction_history: {
+            $regex: ".*" + idTransactionHistory + ".*",
+          },
+        },
+      });
+    }
+    if (page) {
+      queryArr.push({ $skip: (page - 1) * limit });
+      queryArr.push({ $limit: +limit });
+    }
+    const resForms = await TransactionHistory.aggregate(queryArr);
+    res.send(resForms);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
-  if (page) {
-    queryArr.push({ $skip: (page - 1) * limit });
-    queryArr.push({ $limit: +limit });
-  }
-  const resForms = await TransactionHistory.aggregate(queryArr);
-
-  res.send(resForms);
 });
 
 app.get("/history/pagination", async (req, res) => {
@@ -116,7 +125,7 @@ app.get("/history/pagination", async (req, res) => {
     res.send(shipper);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -173,7 +182,7 @@ app.get("/history/search", async (req, res) => {
     res.send(resForms);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 module.exports = app;

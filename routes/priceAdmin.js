@@ -59,7 +59,8 @@ app.get("/", async (req, res) => {
       res.send({ notFound: true });
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -102,7 +103,7 @@ app.put("/", async (req, res) => {
     res.send({ data: "ok" });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -115,7 +116,8 @@ app.get("/history/pagination", async (req, res) => {
       .limit(limit);
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

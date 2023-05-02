@@ -13,7 +13,8 @@ app.get("/", async (req, res) => {
     );
     res.send(transport_price);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // get transport price by id_truck_type
@@ -24,7 +25,8 @@ app.get("/byId/:id", async (req, res) => {
     });
     res.send(transport_price);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // add transport price
@@ -34,7 +36,8 @@ app.post("/", async (req, res) => {
     await transportPrice.save();
     res.send(transportPrice);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // delete transport price
@@ -45,7 +48,8 @@ app.delete("/delete/:id", async (req, res) => {
     });
     res.send(truckPrice);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -56,7 +60,8 @@ app.get("/trucktype", async (req, res) => {
     trucktype.sort((a, b) => Number(a.name) - Number(b.name));
     res.send(trucktype);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // get truck type by name
@@ -67,7 +72,8 @@ app.get("/trucktype/byname/:name", async (req, res) => {
     }).populate("createdBy");
     res.send(trucktype);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // get all truck type with pagination
@@ -81,7 +87,8 @@ app.get("/trucktype/pagination", async (req, res) => {
       .populate("createdBy");
     res.send(truckType);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // add truck type
@@ -91,7 +98,8 @@ app.post("/trucktype", async (req, res) => {
     await trucktype.save();
     res.send(trucktype);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // delete truck type by name
@@ -102,7 +110,8 @@ app.delete("/trucktype/:name", async (req, res) => {
     });
     res.send(truckType);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -112,7 +121,8 @@ app.get("/distance", async (req, res) => {
     const distance = await Distance.find({});
     res.send(distance);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 // add distance
@@ -122,7 +132,8 @@ app.post("/distance", async (req, res) => {
     await distance.save();
     res.send(distance);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

@@ -12,7 +12,8 @@ app.get("/", async (req, res) => {
     );
     res.send(customer);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/byId/:id", async (req, res) => {
@@ -35,7 +36,7 @@ app.get("/byId/:id", async (req, res) => {
     res.send(customer);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/pagination", async (req, res) => {
@@ -56,31 +57,42 @@ app.get("/pagination", async (req, res) => {
       .limit(limit);
     res.send(customer);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/search", async (req, res) => {
-  const { page, limit, idCustomer } = req.query;
-  const queryArr = [{ $sort: { last_active_date: -1 } }];
-  if (idCustomer !== "") {
-    queryArr.push({
-      $match: { id_cus: { $regex: ".*" + idCustomer + ".*" } },
-    });
-  }
-  if (page) {
-    queryArr.push({ $skip: (page - 1) * limit });
-    queryArr.push({ $limit: +limit });
-  }
+  try {
+    const { page, limit, idCustomer } = req.query;
+    const queryArr = [{ $sort: { last_active_date: -1 } }];
+    if (idCustomer !== "") {
+      queryArr.push({
+        $match: { id_cus: { $regex: ".*" + idCustomer + ".*" } },
+      });
+    }
+    if (page) {
+      queryArr.push({ $skip: (page - 1) * limit });
+      queryArr.push({ $limit: +limit });
+    }
 
-  const cus = await Customer.aggregate(queryArr);
-  res.send(cus);
+    const cus = await Customer.aggregate(queryArr);
+    res.send(cus);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
 });
 app.put("/block/:idCustomer", async (req, res) => {
-  const cus = await Customer.find({ id_cus: req.params.idCustomer });
-  const customer = await Customer.findByIdAndUpdate(cus[0]._id, {
-    block: !cus[0].block,
-  });
-  res.send(customer);
+  try {
+    const cus = await Customer.find({ id_cus: req.params.idCustomer });
+    const customer = await Customer.findByIdAndUpdate(cus[0]._id, {
+      block: !cus[0].block,
+    });
+    res.send(customer);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
 });
 
 module.exports = app;

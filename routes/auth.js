@@ -7,7 +7,8 @@ app.get("/", async (req, res) => {
   try {
     res.send("Api auth onready");
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -48,7 +49,8 @@ app.post("/register", async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -61,7 +63,8 @@ app.get("/user/:phone", async (req, res) => {
       res.send({ notFound: true });
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -76,7 +79,8 @@ app.put("/user", async (req, res) => {
     );
     res.send(cus);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -93,7 +97,8 @@ app.put("/user/edituser", async (req, res) => {
     );
     res.send(cus);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

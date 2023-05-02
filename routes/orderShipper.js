@@ -19,7 +19,8 @@ app.get("/distancereceive", async (req, res) => {
       res.send(null);
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -34,7 +35,8 @@ app.get("/shipper/:id_shipper", async (req, res) => {
     ).populate("shipper.id_shipper shipper.truck id_customer");
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -66,7 +68,8 @@ app.put("/", async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -85,7 +88,8 @@ app.put("/receivegoods", async (req, res) => {
     }
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -105,7 +109,8 @@ app.get("/review/:id_shipper", async (req, res) => {
     });
     res.send(data);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -116,7 +121,8 @@ app.post("/expectedaddress", async (req, res) => {
     });
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -128,7 +134,8 @@ app.put("/expectedaddress", async (req, res) => {
     });
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -144,6 +151,7 @@ app.get("/shipping/:id_shipper", async (req, res) => {
       res.send({ isNotFound: true });
     }
   } catch (error) {
+    console.log(error);
     res.send({ isNotFound: true });
   }
 });

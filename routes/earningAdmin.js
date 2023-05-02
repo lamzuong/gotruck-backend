@@ -40,7 +40,7 @@ app.get("/today", async (req, res) => {
     res.send(dataRes);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -83,7 +83,7 @@ app.get("/week", async (req, res) => {
     res.send(dataRes);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -127,7 +127,7 @@ app.get("/month", async (req, res) => {
     res.send(dataRes);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -197,7 +197,7 @@ app.get("/specific", async (req, res) => {
     res.send(dataRes);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -207,7 +207,8 @@ app.post("/", async (req, res) => {
     await earning.save();
     res.send(earning);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

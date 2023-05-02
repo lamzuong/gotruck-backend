@@ -15,7 +15,8 @@ app.get("/", async (req, res) => {
     );
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/byId/:id", async (req, res) => {
@@ -73,7 +74,7 @@ app.get("/byId/:id", async (req, res) => {
     res.send(shipper);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/pagination", async (req, res) => {
@@ -94,72 +95,89 @@ app.get("/pagination", async (req, res) => {
       .limit(limit);
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/search", async (req, res) => {
-  const { page, limit, idShipper } = req.query;
-  const queryArr = [
-    { $match: { status: "Đã duyệt" } },
-    { $sort: { last_active_date: -1 } },
-  ];
-  if (idShipper !== "") {
-    queryArr.push({
-      $match: { id_shipper: { $regex: ".*" + idShipper + ".*" } },
-    });
-  }
-  if (page) {
-    queryArr.push({ $skip: (page - 1) * limit });
-    queryArr.push({ $limit: +limit });
-  }
+  try {
+    const { page, limit, idShipper } = req.query;
+    const queryArr = [
+      { $match: { status: "Đã duyệt" } },
+      { $sort: { last_active_date: -1 } },
+    ];
+    if (idShipper !== "") {
+      queryArr.push({
+        $match: { id_shipper: { $regex: ".*" + idShipper + ".*" } },
+      });
+    }
+    if (page) {
+      queryArr.push({ $skip: (page - 1) * limit });
+      queryArr.push({ $limit: +limit });
+    }
 
-  const cus = await Shipper.aggregate(queryArr);
-  res.send(cus);
+    const cus = await Shipper.aggregate(queryArr);
+    res.send(cus);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
 });
 
 app.put("/block/:idShipper", async (req, res) => {
-  const resp = await Shipper.find({ id_shipper: req.params.idShipper });
-  const shipper = await Shipper.findByIdAndUpdate(resp[0]._id, {
-    block: !resp[0].block,
-  });
-  res.send(shipper);
+  try {
+    const resp = await Shipper.find({ id_shipper: req.params.idShipper });
+    const shipper = await Shipper.findByIdAndUpdate(resp[0]._id, {
+      block: !resp[0].block,
+    });
+    res.send(shipper);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
 });
 
 app.put("/recharge/:idShipper", async (req, res) => {
-  const { shipperSend, id_handler } = req.body;
-  const resp = await Shipper.find({ id_shipper: req.params.idShipper });
-  const shipper = await Shipper.findByIdAndUpdate(resp[0]._id, {
-    balance: shipperSend.balance,
-  });
+  try {
+    const { shipperSend, id_handler } = req.body;
+    const resp = await Shipper.find({ id_shipper: req.params.idShipper });
+    const shipper = await Shipper.findByIdAndUpdate(resp[0]._id, {
+      balance: shipperSend.balance,
+    });
 
-  const trAdd = {
-    id_shipper: shipper._id,
-    money: shipperSend.balance - resp[0].balance,
-    status: "Đã xử lý",
-    type: "Nạp tiền",
-    id_handler: id_handler,
-    approval_date: new Date(),
-  };
+    const trAdd = {
+      id_shipper: shipper._id,
+      money: shipperSend.balance - resp[0].balance,
+      status: "Đã xử lý",
+      type: "Nạp tiền",
+      id_handler: id_handler,
+      approval_date: new Date(),
+    };
 
-  let date = new Date().getFullYear();
-  const checkHasTransactionHistory = await TransactionHistory.findOne(
-    {},
-    {},
-    { sort: { createdAt: -1 } }
-  );
-  if (checkHasTransactionHistory) {
-    let indexLastest = checkHasTransactionHistory.id_transaction_history;
-    let idNew =
-      parseInt((date % 100) + "" + indexLastest.slice(5, indexLastest.length)) +
-      1;
-    trAdd.id_transaction_history = "TSH" + idNew;
-  } else {
-    trAdd.id_transaction_history = "TSH" + (date % 100) + "00001";
+    let date = new Date().getFullYear();
+    const checkHasTransactionHistory = await TransactionHistory.findOne(
+      {},
+      {},
+      { sort: { createdAt: -1 } }
+    );
+    if (checkHasTransactionHistory) {
+      let indexLastest = checkHasTransactionHistory.id_transaction_history;
+      let idNew =
+        parseInt(
+          (date % 100) + "" + indexLastest.slice(5, indexLastest.length)
+        ) + 1;
+      trAdd.id_transaction_history = "TSH" + idNew;
+    } else {
+      trAdd.id_transaction_history = "TSH" + (date % 100) + "00001";
+    }
+    const trsHtr = new TransactionHistory(trAdd);
+    await trsHtr.save();
+
+    res.send(shipper);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
-  const trsHtr = new TransactionHistory(trAdd);
-  await trsHtr.save();
-
-  res.send(shipper);
 });
 
 module.exports = app;

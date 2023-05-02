@@ -19,7 +19,8 @@ app.get("/", async (req, res) => {
       res.send({ notFound: true });
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -33,7 +34,8 @@ app.put("/", async (req, res) => {
     await distanceReceiveOrder.save();
     res.send(distanceReceiveOrder);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

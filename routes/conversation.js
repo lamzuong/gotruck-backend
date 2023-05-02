@@ -10,10 +10,10 @@ app.get("/:id_customer", async (req, res) => {
   try {
     const listConversation = await Conversation.find({
       id_customer: mongoose.Types.ObjectId(req.params.id_customer),
+      form_model: "Order",
     })
       .lean()
       .populate("id_customer id_shipper");
-
     for (let i = 0; i < listConversation.length; i++) {
       try {
         const lastMessage = await Message.findOne(
@@ -31,7 +31,8 @@ app.get("/:id_customer", async (req, res) => {
     listConversation.sort((a, b) => a.timeLastMess - b.timeLastMess);
     res.send(listConversation);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -39,6 +40,7 @@ app.get("/shipper/:id_shipper", async (req, res) => {
   try {
     const listConversation = await Conversation.find({
       id_shipper: mongoose.Types.ObjectId(req.params.id_shipper),
+      form_model: "Order",
     })
       .lean()
       .populate("id_customer id_shipper");
@@ -60,12 +62,14 @@ app.get("/shipper/:id_shipper", async (req, res) => {
     listConversation.sort((a, b) => a.timeLastMess - b.timeLastMess);
     res.send(listConversation);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
 app.post("/", async (req, res) => {
   try {
+    console.log(req.body);
     const haveConversation = await Conversation.findOne({
       id_customer: mongoose.Types.ObjectId(req.body.id_customer),
       id_shipper: mongoose.Types.ObjectId(req.body.id_shipper),
@@ -86,7 +90,8 @@ app.post("/", async (req, res) => {
       res.send(cvs);
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -116,7 +121,7 @@ app.get("/admin/conversation", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -130,7 +135,7 @@ app.get("/message/:id_conversation", async (req, res) => {
 
     res.send(listMessage);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -140,7 +145,8 @@ app.post("/message", async (req, res) => {
     await mess.save();
     res.send(mess);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -155,7 +161,27 @@ app.put("/disable", async (req, res) => {
     );
     res.send(cvs);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.get("/form/:id_form", async (req, res) => {
+  try {
+    const { id_form } = req.params;
+    const haveConversation = await Conversation.findOne({
+      id_form: mongoose.Types.ObjectId(id_form),
+    })
+      .lean()
+      .populate("id_form id_customer id_admin");
+    if (haveConversation && haveConversation._id) {
+      res.send(haveConversation);
+    } else {
+      res.send({ isNotFound: true });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

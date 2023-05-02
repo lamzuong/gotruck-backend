@@ -83,7 +83,8 @@ app.get("/gotruck/", (req, res) => {
   try {
     res.send("Api gotruck onready");
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

@@ -17,7 +17,8 @@ app.get("/id/:id_feedback", async (req, res) => {
       .lean();
     res.status(200).send(feed_back);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -56,7 +57,8 @@ app.put("/", async (req, res) => {
       res.status(200).send({ data: "ok" });
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -104,8 +106,7 @@ app.get("/pagination", async (req, res) => {
     res.send(feedBack);
   } catch (error) {
     console.log(error);
-
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -144,7 +145,7 @@ app.get("/search", async (req, res) => {
     res.send(resFeedback);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -184,7 +185,7 @@ app.get("/history/pagination", async (req, res) => {
     res.send(feedBack);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -228,7 +229,7 @@ app.get("/history/search", async (req, res) => {
     res.send(resFeedback);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

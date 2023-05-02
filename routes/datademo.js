@@ -115,7 +115,7 @@ app.get("/shipperdemo", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -212,7 +212,7 @@ app.get("/formregister", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -258,7 +258,7 @@ app.get("/withdraw", async (req, res) => {
     res.send({ data: "ok" });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -315,7 +315,8 @@ app.get("/vehicle", async (req, res) => {
     }
     res.send({ data: "ok" });
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -359,7 +360,8 @@ app.get("/feedback", async (req, res) => {
     }
     res.send({ data: "ok" });
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -618,7 +620,7 @@ app.get("/orderdemo", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

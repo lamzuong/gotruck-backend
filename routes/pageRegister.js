@@ -12,7 +12,8 @@ app.get("/trucktype", async (req, res) => {
     trucktype.sort((a, b) => Number(a.name) - Number(b.name));
     res.send(trucktype);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -77,7 +78,7 @@ app.post("/register", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

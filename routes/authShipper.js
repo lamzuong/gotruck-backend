@@ -22,7 +22,8 @@ app.get("/", async (req, res) => {
 
     res.send(truckSort);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -61,7 +62,8 @@ app.get("/user/:phone", async (req, res) => {
     }
     res.send(shipper);
   } catch (error) {
-    res.send({ notFound: true });
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -76,7 +78,8 @@ app.put("/user", async (req, res) => {
     );
     res.send(shp);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -92,7 +95,8 @@ app.put("/user/edituser", async (req, res) => {
     );
     res.send(shp);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

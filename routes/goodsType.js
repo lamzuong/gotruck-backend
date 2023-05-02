@@ -8,7 +8,8 @@ app.post("/", async (req, res) => {
     await goodsType.save();
     res.send(goodsType);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.put("/", async (req, res) => {
@@ -31,7 +32,7 @@ app.put("/", async (req, res) => {
     res.send(temp);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/", async (req, res) => {
@@ -39,7 +40,8 @@ app.get("/", async (req, res) => {
     const goodsType = await GoodsType.find({ deletedAt: { $eq: null } });
     res.send(goodsType);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/pagination", async (req, res) => {
@@ -50,7 +52,8 @@ app.get("/pagination", async (req, res) => {
       .limit(limit);
     res.send(goodsType);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/search/:keyword", async (req, res) => {
@@ -61,7 +64,8 @@ app.get("/search/:keyword", async (req, res) => {
     });
     res.send(goodsType);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.put("/delete", async (req, res) => {
@@ -76,7 +80,8 @@ app.put("/delete", async (req, res) => {
     );
     res.send(goodsType);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

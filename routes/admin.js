@@ -17,7 +17,8 @@ app.post("/", async (req, res) => {
     await admin.save();
     res.send(admin);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/", async (req, res) => {
@@ -33,7 +34,8 @@ app.get("/", async (req, res) => {
     res.send("000");
     return;
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.put("/", async (req, res) => {
@@ -46,7 +48,8 @@ app.put("/", async (req, res) => {
     });
     res.send(res1);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

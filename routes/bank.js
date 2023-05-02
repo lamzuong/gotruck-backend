@@ -12,7 +12,8 @@ app.get("/", async (req, res) => {
     const bank = await Bank.find({}, {}, { sort: { updatedAt: -1 } });
     res.send(bank);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -23,7 +24,8 @@ app.post("/", async (req, res) => {
     await bank.save();
     res.send(bank);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -60,7 +62,7 @@ app.post("/withdraw", async (req, res) => {
     res.send(trsHtr);
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -76,7 +78,8 @@ app.get("/history/:id_shipper", async (req, res) => {
     );
     res.send(history);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

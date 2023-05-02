@@ -36,7 +36,8 @@ app.post("/vehicle", async (req, res) => {
       res.send(tr);
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -60,7 +61,8 @@ app.put("/vehicle", async (req, res) => {
     );
     res.send(truckShipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -77,7 +79,8 @@ app.put("/vehicle/delete", async (req, res) => {
     );
     res.send(truckShipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

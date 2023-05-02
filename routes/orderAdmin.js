@@ -11,7 +11,8 @@ app.get("/", async (req, res) => {
     );
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/pagination", async (req, res) => {
@@ -24,7 +25,8 @@ app.get("/pagination", async (req, res) => {
       .limit(limit);
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.get("/search", async (req, res) => {
@@ -91,7 +93,8 @@ app.get("/search", async (req, res) => {
     const order = await Order.aggregate(queryArr);
     res.send(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

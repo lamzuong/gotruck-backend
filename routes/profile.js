@@ -2,13 +2,15 @@ const exprees = require("express");
 const SavedPlace = require("../models/savedPlace");
 const FeedBack = require("../models/feedBack");
 const mongoose = require("mongoose");
+const Conversation = require("../models/conversation");
 const app = exprees();
 
 app.get("/", async (req, res) => {
   try {
     res.send("Api profile onready");
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -23,7 +25,8 @@ app.get("/savedplace/:id_customer", async (req, res) => {
     );
     res.send(savedPlace);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 app.post("/savedplace", async (req, res) => {
@@ -32,7 +35,8 @@ app.post("/savedplace", async (req, res) => {
     await savedPlace.save();
     res.send(savedPlace);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -45,7 +49,8 @@ app.put("/savedplace", async (req, res) => {
     );
     res.send(savedPlace);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -55,7 +60,8 @@ app.delete("/savedplace/:_id", async (req, res) => {
     if (!user) res.status(404).send("No item founds");
     else res.send(user);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -67,10 +73,16 @@ app.get("/feedback/:id_customer", async (req, res) => {
       },
       {},
       { sort: { updatedAt: -1 } }
-    );
-    res.send(feedBack);
+    ).lean();
+
+    if (feedBack.length > 0) {
+      res.send(feedBack);
+    } else {
+      res.send({ isNotFound: true });
+    }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -102,7 +114,8 @@ app.post("/feedback", async (req, res) => {
 
     res.send(feedBack);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 

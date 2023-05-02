@@ -21,7 +21,8 @@ app.get("/", async (req, res) => {
       res.send({ isNotFound: true });
     }
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -64,7 +65,7 @@ app.put("/", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
@@ -81,46 +82,52 @@ app.get("/pagination", async (req, res) => {
       .limit(limit);
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
 app.get("/search", async (req, res) => {
-  const { page, limit, idTruck } = req.query;
-  const queryArr = [
-    {
-      $lookup: {
-        from: "truck_type",
-        localField: "type_truck",
-        foreignField: "_id",
-        as: "type_truck",
+  try {
+    const { page, limit, idTruck } = req.query;
+    const queryArr = [
+      {
+        $lookup: {
+          from: "truck_type",
+          localField: "type_truck",
+          foreignField: "_id",
+          as: "type_truck",
+        },
       },
-    },
-    { $unwind: "$type_truck" },
-    {
-      $lookup: {
-        from: "shipper",
-        localField: "id_shipper",
-        foreignField: "_id",
-        as: "id_shipper",
+      { $unwind: "$type_truck" },
+      {
+        $lookup: {
+          from: "shipper",
+          localField: "id_shipper",
+          foreignField: "_id",
+          as: "id_shipper",
+        },
       },
-    },
-    { $unwind: "$id_shipper" },
-    { $match: { status: "Chưa duyệt" } },
-    { $sort: { createdAt: -1 } },
-  ];
-  if (idTruck !== "") {
-    queryArr.push({
-      $match: { id_truck: { $regex: ".*" + idTruck + ".*" } },
-    });
-  }
-  if (page) {
-    queryArr.push({ $skip: (page - 1) * limit });
-    queryArr.push({ $limit: +limit });
-  }
-  const resTruck = await TruckShipper.aggregate(queryArr);
+      { $unwind: "$id_shipper" },
+      { $match: { status: "Chưa duyệt" } },
+      { $sort: { createdAt: -1 } },
+    ];
+    if (idTruck !== "") {
+      queryArr.push({
+        $match: { id_truck: { $regex: ".*" + idTruck + ".*" } },
+      });
+    }
+    if (page) {
+      queryArr.push({ $skip: (page - 1) * limit });
+      queryArr.push({ $limit: +limit });
+    }
+    const resTruck = await TruckShipper.aggregate(queryArr);
 
-  res.send(resTruck);
+    res.send(resTruck);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
 });
 
 app.get("/history/pagination", async (req, res) => {
@@ -143,59 +150,65 @@ app.get("/history/pagination", async (req, res) => {
       .limit(limit);
     res.send(shipper);
   } catch (error) {
-    res.status(500).send(error);
+    console.log(error);
+    res.status(500).send({ data: "error" });
   }
 });
 
 app.get("/history/search", async (req, res) => {
-  const { page, limit, idTruck } = req.query;
-  const queryArr = [
-    {
-      $lookup: {
-        from: "truck_type",
-        localField: "type_truck",
-        foreignField: "_id",
-        as: "type_truck",
+  try {
+    const { page, limit, idTruck } = req.query;
+    const queryArr = [
+      {
+        $lookup: {
+          from: "truck_type",
+          localField: "type_truck",
+          foreignField: "_id",
+          as: "type_truck",
+        },
       },
-    },
-    { $unwind: "$type_truck" },
-    {
-      $lookup: {
-        from: "shipper",
-        localField: "id_shipper",
-        foreignField: "_id",
-        as: "id_shipper",
+      { $unwind: "$type_truck" },
+      {
+        $lookup: {
+          from: "shipper",
+          localField: "id_shipper",
+          foreignField: "_id",
+          as: "id_shipper",
+        },
       },
-    },
-    { $unwind: "$id_shipper" },
-    {
-      $lookup: {
-        from: "admin",
-        localField: "id_handler",
-        foreignField: "_id",
-        as: "id_handler",
+      { $unwind: "$id_shipper" },
+      {
+        $lookup: {
+          from: "admin",
+          localField: "id_handler",
+          foreignField: "_id",
+          as: "id_handler",
+        },
       },
-    },
-    { $unwind: "$id_handler" },
-    {
-      $match: {
-        $or: [{ status: "Đã duyệt" }, { status: "Từ chối" }],
+      { $unwind: "$id_handler" },
+      {
+        $match: {
+          $or: [{ status: "Đã duyệt" }, { status: "Từ chối" }],
+        },
       },
-    },
-    { $sort: { approval_date: -1 } },
-  ];
-  if (idTruck !== "") {
-    queryArr.push({
-      $match: { id_truck: { $regex: ".*" + idTruck + ".*" } },
-    });
-  }
-  if (page) {
-    queryArr.push({ $skip: (page - 1) * limit });
-    queryArr.push({ $limit: +limit });
-  }
-  const resTruck = await TruckShipper.aggregate(queryArr);
+      { $sort: { approval_date: -1 } },
+    ];
+    if (idTruck !== "") {
+      queryArr.push({
+        $match: { id_truck: { $regex: ".*" + idTruck + ".*" } },
+      });
+    }
+    if (page) {
+      queryArr.push({ $skip: (page - 1) * limit });
+      queryArr.push({ $limit: +limit });
+    }
+    const resTruck = await TruckShipper.aggregate(queryArr);
 
-  res.send(resTruck);
+    res.send(resTruck);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
 });
 
 module.exports = app;
