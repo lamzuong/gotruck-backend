@@ -58,7 +58,14 @@ app.get("/user/:phone", async (req, res) => {
   try {
     let cus = await Customer.findOne(req.params);
     if (cus) {
-      res.send(cus);
+      let cusNew = await Customer.findByIdAndUpdate(
+        cus._id,
+        {
+          last_active_date: new Date(),
+        },
+        { new: true }
+      );
+      res.send(cusNew);
     } else {
       res.send({ notFound: true });
     }
@@ -95,6 +102,17 @@ app.put("/user/edituser", async (req, res) => {
         new: true,
       }
     );
+    res.send(cus);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.get("/block/:id_customer", async (req, res) => {
+  let id_customer = req.params.id_customer;
+  try {
+    let cus = await Customer.findById(id_customer);
     res.send(cus);
   } catch (error) {
     console.log(error);

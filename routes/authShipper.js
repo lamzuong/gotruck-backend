@@ -31,6 +31,13 @@ app.get("/user/:phone", async (req, res) => {
   try {
     const shipper = await Shipper.findOne(req.params).lean();
     if (shipper) {
+      await Shipper.findByIdAndUpdate(
+        shipper._id,
+        {
+          last_active_date: new Date(),
+        },
+        { new: true }
+      );
       const truckShipper = await TruckShipper.find(
         {
           id_shipper: shipper._id,
@@ -93,6 +100,17 @@ app.put("/user/edituser", async (req, res) => {
         new: true,
       }
     );
+    res.send(shp);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.get("/block/:id_shipper", async (req, res) => {
+  let id_shipper = req.params.id_shipper;
+  try {
+    let shp = await Shipper.findById(id_shipper);
     res.send(shp);
   } catch (error) {
     console.log(error);

@@ -11,24 +11,27 @@ app.get("/:id_customer", async (req, res) => {
     const listConversation = await Conversation.find({
       id_customer: mongoose.Types.ObjectId(req.params.id_customer),
       form_model: "Order",
+      disable: false,
     })
       .lean()
-      .populate("id_customer id_shipper");
+      .populate("id_customer id_shipper id_form");
     for (let i = 0; i < listConversation.length; i++) {
-      try {
-        const lastMessage = await Message.findOne(
-          { id_conversation: listConversation[i]._id },
-          {},
-          { sort: { createdAt: -1 } }
-        );
+      const lastMessage = await Message.findOne(
+        { id_conversation: listConversation[i]._id },
+        {},
+        { sort: { createdAt: -1 } }
+      );
+      if (lastMessage) {
         listConversation[i].lastMess = lastMessage.message;
         listConversation[i].timeLastMess = lastMessage.createdAt;
-      } catch (error) {
+      } else {
         listConversation[i].lastMess = "";
         listConversation[i].timeLastMess = new Date();
       }
     }
-    listConversation.sort((a, b) => a.timeLastMess - b.timeLastMess);
+    listConversation.sort(
+      (a, b) => new Date(b.timeLastMess) - new Date(a.timeLastMess)
+    );
     res.send(listConversation);
   } catch (error) {
     console.log(error);
@@ -41,9 +44,10 @@ app.get("/shipper/:id_shipper", async (req, res) => {
     const listConversation = await Conversation.find({
       id_shipper: mongoose.Types.ObjectId(req.params.id_shipper),
       form_model: "Order",
+      disable: false,
     })
       .lean()
-      .populate("id_customer id_shipper");
+      .populate("id_customer id_shipper id_form");
 
     for (let i = 0; i < listConversation.length; i++) {
       try {
@@ -59,7 +63,9 @@ app.get("/shipper/:id_shipper", async (req, res) => {
         listConversation[i].timeLastMess = new Date();
       }
     }
-    listConversation.sort((a, b) => a.timeLastMess - b.timeLastMess);
+    listConversation.sort(
+      (a, b) => new Date(b.timeLastMess) - new Date(a.timeLastMess)
+    );
     res.send(listConversation);
   } catch (error) {
     console.log(error);
@@ -72,6 +78,7 @@ app.post("/", async (req, res) => {
     const haveConversation = await Conversation.findOne({
       id_customer: mongoose.Types.ObjectId(req.body.id_customer),
       id_shipper: mongoose.Types.ObjectId(req.body.id_shipper),
+      id_form: req.body.id_form,
     })
       .lean()
       .populate("id_customer id_shipper");
@@ -83,6 +90,7 @@ app.post("/", async (req, res) => {
       const cvs = await Conversation.findOne({
         id_customer: mongoose.Types.ObjectId(req.body.id_customer),
         id_shipper: mongoose.Types.ObjectId(req.body.id_shipper),
+        id_form: req.body.id_form,
       })
         .lean()
         .populate("id_customer id_shipper");
@@ -151,14 +159,18 @@ app.post("/message", async (req, res) => {
 
 app.put("/disable", async (req, res) => {
   try {
-    const cvs = await Conversation.findById(
-      req.body.id_conversation,
+    const cvs = await Conversation.findOneAndUpdate(
+      { id_form: req.body._id },
       {
         disable: true,
       },
       { new: true }
     );
-    res.send(cvs);
+    if (cvs) {
+      res.send(cvs);
+    } else {
+      res.send({ data: "Không có cuộc hội thoại" });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });

@@ -73,6 +73,7 @@ app.use("/gotruck/pageregister", pageRegister);
 app.use("/gotruck/datademo", dataDemo);
 
 const mongoose = require("mongoose");
+const Order = require("./models/order");
 mongoose.set("strictQuery", false);
 mongoose.connect(process.env.URL_CONNECT_MONGODB, {
   useUnifiedTopology: true,
@@ -97,9 +98,29 @@ const io = require("socket.io")(server, {
   },
 });
 
+const cancelOrder = async (data) => {
+  try {
+    const checkCancel = await Order.findById(data._id);
+    if (checkCancel.status === "Chưa nhận") {
+      const dateTemp = data;
+      dateTemp.reason_cancel = {};
+      dateTemp.reason_cancel.date_cancel = new Date();
+      dateTemp.reason_cancel.user_cancel = "AutoDelete";
+      dateTemp.reason_cancel.content = "Tự động xóa";
+      dateTemp.status = "Đã hủy";
+      const order = await Order.findByIdAndUpdate(dateTemp._id, dateTemp, {
+        new: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 io.on("connection", (socket) => {
   socket.on("customer-has-new-order", (data) => {
-    setTimeout(() => {
+    setTimeout(async () => {
+      cancelOrder(data.dataOrder);
       io.emit(data.type_truck + "cancel", data.dataOrder);
     }, 900000);
     io.emit(data.type_truck + "", data.dataOrder);

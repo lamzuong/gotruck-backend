@@ -11,7 +11,10 @@ app.post("/vehicle", async (req, res) => {
     const checkExistTruck = await TruckShipper.find({
       license_plate: data.license_plate,
     });
-    if (checkExistTruck.length > 0) {
+    const checkTruckInFormRegister = await FormRegister.find({
+      license_plate: data.license_plate,
+    });
+    if (checkExistTruck.length > 0 || checkTruckInFormRegister.length > 0) {
       res.send({ isExist: true });
     } else {
       let date = new Date().getFullYear();

@@ -44,7 +44,10 @@ app.put("/", async (req, res) => {
   try {
     if (req.body.status === "Đã hủy") {
       const checkCancel = await Order.findById(req.body._id);
-      if (checkCancel.status === "Đã hủy") {
+      if (
+        checkCancel.status === "Đã hủy" ||
+        checkCancel.status === "Đang giao"
+      ) {
         res.send(checkCancel);
       } else {
         req.body.reason_cancel.date_cancel = new Date();
@@ -145,6 +148,46 @@ app.get("/shipping/:id_shipper", async (req, res) => {
       "shipper.id_shipper": mongoose.Types.ObjectId(req.params.id_shipper),
       status: ["Đã nhận", "Đang giao"],
     });
+    if (order) {
+      res.send(order);
+    } else {
+      res.send({ isNotFound: true });
+    }
+  } catch (error) {
+    console.log(error);
+    res.send({ isNotFound: true });
+  }
+});
+
+app.put("/location", async (req, res) => {
+  try {
+    const shipperNew = req.body;
+    const shp = await Shipper.findByIdAndUpdate(
+      shipperNew._id,
+      {
+        last_active_date: new Date(),
+        current_address: shipperNew.current_address,
+      },
+      { new: true }
+    );
+    res.send(shp);
+  } catch (error) {
+    console.log(error);
+    res.send({ isNotFound: true });
+  }
+});
+
+app.get("/ordercurrent/:id_shipper", async (req, res) => {
+  try {
+    const id_shipper = req.params.id_shipper;
+    const order = await Order.findOne(
+      {
+        "shipper.id_shipper": mongoose.Types.ObjectId(id_shipper),
+        $or: [{ status: "Đã nhận" }, { status: "Đang giao" }],
+      },
+      {},
+      { sort: { updatedAt: -1 } }
+    ).populate("shipper.id_shipper shipper.truck id_customer");
     if (order) {
       res.send(order);
     } else {
