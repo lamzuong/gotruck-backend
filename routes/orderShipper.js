@@ -78,6 +78,9 @@ app.put("/", async (req, res) => {
 
 app.put("/receivegoods", async (req, res) => {
   try {
+    if (req.body.status === "Đã giao") {
+      req.body.date_complete = new Date();
+    }
     const order = await Order.findByIdAndUpdate(req.body._id, req.body, {
       new: true,
     });

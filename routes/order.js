@@ -2,6 +2,7 @@ const exprees = require("express");
 const FeeApp = require("../models/feeApp");
 const Order = require("../models/order");
 const mongoose = require("mongoose");
+const Shipper = require("../models/shipper");
 const app = exprees();
 
 app.get("/", async (req, res) => {
@@ -121,6 +122,20 @@ app.post("/review", async (req, res) => {
       }
     );
     res.send(order);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.get("/shipper/:id_shipper", async (req, res) => {
+  try {
+    const shp = await Shipper.findById(req.params.id_shipper);
+    if (shp) {
+      res.send(shp);
+    } else {
+      res.send({ isNotFound: true });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });
