@@ -14,6 +14,20 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/order/:id_order", async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id_order);
+    if (order && order._id) {
+      res.send(order);
+    } else {
+      res.send({ isNotFound: true });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
 app.get("/notshipper/order", async (req, res) => {
   try {
     const order = await Order.find(

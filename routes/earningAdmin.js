@@ -177,7 +177,7 @@ app.get("/specific", async (req, res) => {
         dataRes.earnPerHour.push(subtotal);
       }
     } else {
-      for (let i = tempCalc; i > 0; i--) {
+      for (let i = tempCalc; i >= 0; i--) {
         const dateTemp = earning.filter((item) => {
           let ms1 = item.date_complete.getTime();
           let ms2 = endDateTemp.getTime();
