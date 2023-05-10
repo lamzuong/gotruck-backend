@@ -11,14 +11,14 @@ app.get("/today", async (req, res) => {
   try {
     const earning = await Order.find(
       {
-        updatedAt: {
+        date_complete: {
           $gte: new Date(today.toISOString().slice(0, 10) + "T00:00:00.000Z"),
           $lt: new Date(tomorrow.toISOString().slice(0, 10) + "T00:00:00.000Z"),
         },
         status: "Đã giao",
       },
       {},
-      { sort: { updatedAt: 1 } }
+      { sort: { date_complete: 1 } }
     );
     let dataRes = { earnPerHour: [], total: 0 };
 
@@ -27,7 +27,7 @@ app.get("/today", async (req, res) => {
     }
     for (let i = 0; i < 24; i++) {
       const hour = earning.filter((item) => {
-        if (new Date(item.updatedAt).getHours() === i) {
+        if (new Date(item.date_complete).getHours() === i) {
           return item;
         }
       });
@@ -53,7 +53,7 @@ app.get("/week", async (req, res) => {
   lastweek.setDate(lastweek.getDate() - 6);
   try {
     const earning = await Order.find({
-      updatedAt: {
+      date_complete: {
         $gte: new Date(lastweek.toISOString().slice(0, 10) + "T00:00:00.000Z"),
         $lt: new Date(today.toISOString().slice(0, 10) + "T00:00:00.000Z"),
       },
@@ -67,7 +67,7 @@ app.get("/week", async (req, res) => {
 
     for (let i = 7; i > 0; --i) {
       const dateTemp = earning.filter((item) => {
-        let ms1 = item.updatedAt.getTime();
+        let ms1 = item.date_complete.getTime();
         let ms2 = new Date().getTime();
         let temp = Math.ceil((ms2 - ms1) / (24 * 60 * 60 * 1000));
         if (temp == i) {
@@ -96,7 +96,7 @@ app.get("/month", async (req, res) => {
   today.setDate(today.getDate() + 1);
   try {
     const earning = await Order.find({
-      updatedAt: {
+      date_complete: {
         $gte: new Date(lastmonth.toISOString().slice(0, 10) + "T00:00:00.000Z"),
         $lte: new Date(today.toISOString().slice(0, 10) + "T00:00:00.000Z"),
       },
@@ -109,7 +109,7 @@ app.get("/month", async (req, res) => {
     }
     for (let i = 30; i > 0; --i) {
       const dateTemp = earning.filter((item) => {
-        let ms1 = item.updatedAt.getTime();
+        let ms1 = item.date_complete.getTime();
         let ms2 = new Date().getTime();
         let temp = Math.ceil((ms2 - ms1) / (24 * 60 * 60 * 1000));
         if (temp == i) {
@@ -146,7 +146,7 @@ app.get("/specific", async (req, res) => {
 
   try {
     const earning = await Order.find({
-      updatedAt: {
+      date_complete: {
         $gte: new Date(
           startDateTemp.toISOString().slice(0, 10) + "T00:00:00.000Z"
         ),
@@ -166,7 +166,7 @@ app.get("/specific", async (req, res) => {
     if (startDate === endDate) {
       for (let i = 0; i < 24; i++) {
         const hour = earning.filter((item) => {
-          if (new Date(item.updatedAt).getHours() === i) {
+          if (new Date(item.date_complete).getHours() === i) {
             return item;
           }
         });
@@ -179,7 +179,7 @@ app.get("/specific", async (req, res) => {
     } else {
       for (let i = tempCalc; i > 0; i--) {
         const dateTemp = earning.filter((item) => {
-          let ms1 = item.updatedAt.getTime();
+          let ms1 = item.date_complete.getTime();
           let ms2 = endDateTemp.getTime();
           let temp = Math.ceil((ms2 - ms1) / (24 * 60 * 60 * 1000));
           if (temp == i) {
