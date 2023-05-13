@@ -35,7 +35,6 @@ const formVehicle = require("./routes/formVehicle");
 const formFeedback = require("./routes/formFeedBack");
 const feeAdmin = require("./routes/feeAdmin");
 
-
 const bank = require("./routes/bank");
 const pageRegister = require("./routes/pageRegister");
 
@@ -122,39 +121,39 @@ io.on("connection", (socket) => {
   socket.on("customer-has-new-order", (data) => {
     setTimeout(async () => {
       cancelOrder(data.dataOrder);
-      io.emit(data.type_truck + "cancel", data.dataOrder);
+      io.emit("cancel" + data.type_truck, data.dataOrder);
     }, 900000);
-    io.emit(data.type_truck + "", data.dataOrder);
+    io.emit("data" + data.type_truck, data.dataOrder);
   });
 
   socket.on("shipper_receive", (data) => {
-    io.emit(data.id_customer + "", data);
-    io.emit(data.truck_type + "received", data);
+    io.emit("data" + data.id_customer, data);
+    io.emit("received" + data.truck_type, data);
   });
 
   socket.on("shipper_cancel", (data) => {
-    io.emit(data.id_customer + "", data);
+    io.emit("data" + data.id_customer, data);
   });
 
   socket.on("customer_cancel", (data) => {
-    io.emit(data.truck_type + "cancel", data);
+    io.emit("cancel" + data.truck_type, data);
   });
 
   socket.on("customer_cancel_received", (data) => {
-    io.emit(data.truck_type + "cancel_received", data);
+    io.emit("cancel_received" + data.truck_type, data);
   });
 
   socket.on("shipper_shipping", (data) => {
-    io.emit(data.id_customer + "", data);
+    io.emit("data" + data.id_customer, data);
   });
 
   socket.on("shipper_completed", (data) => {
-    io.emit(data.id_customer + "", data);
+    io.emit("data" + data.id_customer, data);
   });
 
   socket.on("location_shipper", (data) => {
     if (data.id_order) {
-      io.emit(data.id_order + "", data.locationShipper);
+      io.emit("data" + data.id_order, data.locationShipper);
     }
   });
 

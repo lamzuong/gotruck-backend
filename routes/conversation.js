@@ -159,7 +159,6 @@ app.post("/message", async (req, res) => {
 
 app.put("/disable", async (req, res) => {
   try {
-    console.log(req.body);
     const cvs = await Conversation.findOneAndUpdate(
       { id_form: req.body._id },
       {
@@ -167,7 +166,6 @@ app.put("/disable", async (req, res) => {
       },
       { new: true }
     );
-    console.log(cvs);
     if (cvs) {
       res.send(cvs);
     } else {
