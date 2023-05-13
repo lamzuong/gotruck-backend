@@ -159,7 +159,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    io.emit(data.id_receive + "message", data);
+    io.emit("message" + data.id_receive, data);
   });
 });
 

@@ -11,7 +11,7 @@ app.get("/:id_customer", async (req, res) => {
     const listConversation = await Conversation.find({
       id_customer: mongoose.Types.ObjectId(req.params.id_customer),
       form_model: "Order",
-      disable: false,
+      // disable: false,
     })
       .lean()
       .populate("id_customer id_shipper id_form");
@@ -44,7 +44,7 @@ app.get("/shipper/:id_shipper", async (req, res) => {
     const listConversation = await Conversation.find({
       id_shipper: mongoose.Types.ObjectId(req.params.id_shipper),
       form_model: "Order",
-      disable: false,
+      // disable: false,
     })
       .lean()
       .populate("id_customer id_shipper id_form");
@@ -159,6 +159,7 @@ app.post("/message", async (req, res) => {
 
 app.put("/disable", async (req, res) => {
   try {
+    console.log(req.body);
     const cvs = await Conversation.findOneAndUpdate(
       { id_form: req.body._id },
       {
@@ -166,6 +167,7 @@ app.put("/disable", async (req, res) => {
       },
       { new: true }
     );
+    console.log(cvs);
     if (cvs) {
       res.send(cvs);
     } else {
