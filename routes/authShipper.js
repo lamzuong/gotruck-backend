@@ -64,10 +64,10 @@ app.get("/user/:phone", async (req, res) => {
       });
 
       shipper.infoAllTruck = truckSort;
+      res.send(shipper);
     } else {
       res.send({ notFound: true });
     }
-    res.send(shipper);
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });
