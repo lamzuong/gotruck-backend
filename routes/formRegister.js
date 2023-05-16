@@ -1,10 +1,15 @@
 const exprees = require("express");
+const nodeMailer = require("nodemailer");
+const app = exprees();
+
 const GoodsType = require("../models/goodsType");
 const Shipper = require("../models/shipper");
 const TruckShipper = require("../models/truckShipper");
-const app = exprees();
 const mongoose = require("mongoose");
 const FormRegister = require("../models/formRegister");
+
+const adminEmail = "lamdavid821@gmail.com";
+const adminPassword = "versihqklcltvsgx";
 
 app.get("/", async (req, res) => {
   try {
@@ -133,6 +138,21 @@ app.put("/", async (req, res) => {
         { new: true }
       );
 
+      const smtp = nodeMailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: adminEmail,
+          pass: adminPassword,
+        },
+      });
+      await smtp.sendMail({
+        to: data.email,
+        from: adminEmail,
+        subject: "GoTruck - Thông báo về đơn đăng ký trở thành đối tác tài xế", // Tiêu đề email
+        html: `<p>Chúc mừng ${data.name} đã trở thành tài xế của GoTruck.</p><br/>
+        <p>Từ nay bạn có thể đăng nhập vào GoTruck - ShipperApp bằng số điện thoại ${data.phone} và vận chuyển các đơn hàng</p><br/>
+        <p>Thông tin chi tiết vui lòng liên hệ trực tiếp để tổng đài của GoTruck - 0794861181</p>`,
+      });
       res.send({
         status: "ok",
         message: "Thành công",
