@@ -11,9 +11,11 @@ const Customer = require("../models/customer");
 app.get("/", async (req, res) => {
   try {
     let { page, limit } = req.query;
-    const totalItem = await Notification.find({});
+    const totalItem = await Notification.find({
+      id_handler: { $exists: true },
+    });
     const notification = await Notification.find(
-      {},
+      { id_handler: { $exists: true } },
       {},
       { sort: { createdAt: -1 } }
     )
