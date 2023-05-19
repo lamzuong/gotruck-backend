@@ -74,6 +74,7 @@ app.use("/gotruck/datademo", dataDemo);
 
 const mongoose = require("mongoose");
 const Order = require("./models/order");
+const Notification = require("./models/notification");
 mongoose.set("strictQuery", false);
 mongoose.connect(process.env.URL_CONNECT_MONGODB, {
   useUnifiedTopology: true,
@@ -108,9 +109,19 @@ const cancelOrder = async (data) => {
       dateTemp.reason_cancel.user_cancel = "AutoDelete";
       dateTemp.reason_cancel.content = "Tự động xóa";
       dateTemp.status = "Đã hủy";
-      const order = await Order.findByIdAndUpdate(dateTemp._id, dateTemp, {
+      await Order.findByIdAndUpdate(dateTemp._id, dateTemp, {
         new: true,
       });
+      const notifyData = {
+        title: "Thông báo đơn hàng " + data.id_order,
+        content: "Đơn hàng đã tự động bị hủy vì quá thời hạn nhận đơn",
+        type_notify: "Order",
+        type_send: "Specific",
+        id_receiver: data.id_customer?._id || data.id_customer,
+        userModel: "Customer",
+      };
+      const notify = new Notification(notifyData);
+      await notify.save();
     }
   } catch (error) {
     console.log(error);

@@ -38,7 +38,6 @@ app.get("/", async (req, res) => {
 app.post("/", async (req, res) => {
   try {
     const data = req.body;
-
     let getIDReceiver = "";
     if (data.type_send === "Specific") {
       if (data.userModel === "Customer") {
@@ -166,4 +165,51 @@ app.put("/read", async (req, res) => {
   }
 });
 
+app.post("/shipper", async (req, res) => {
+  try {
+    const data = req.body;
+
+    let getIDReceiver = "";
+    if (data.type_send === "Specific") {
+      if (data.userModel === "Customer") {
+        getIDReceiver = await Customer.findOne({
+          _id: mongoose.Types.ObjectId(data.id_receiver),
+        }).lean();
+      } else if (data.userModel === "Shipper") {
+        getIDReceiver = await Shipper.findOne({
+          _id: mongoose.Types.ObjectId(data.id_receiver),
+        }).lean();
+      }
+      if (!getIDReceiver) {
+        res.send({ isNotFound: true, data: "Mã người dùng không tồn tại" });
+        return;
+      } else {
+        data.id_receiver = getIDReceiver._id;
+      }
+    }
+
+    let date = new Date().getFullYear();
+    const checkHasNotify = await Notification.findOne(
+      {},
+      {},
+      { sort: { createdAt: -1 } }
+    );
+    if (checkHasNotify) {
+      let indexLastest = checkHasNotify.id_notify;
+      let indexNew =
+        parseInt(
+          (date % 100) + "" + indexLastest.slice(5, indexLastest.length)
+        ) + 1;
+      data.id_notify = "NTF" + indexNew;
+    } else {
+      data.id_notify = "NTF" + (date % 100) + "00001";
+    }
+    const notify = new Notification(data);
+    await notify.save();
+    res.send(notify);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
 module.exports = app;
