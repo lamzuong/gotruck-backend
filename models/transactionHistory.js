@@ -27,7 +27,7 @@ const transactionHistorySchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enums: ["Rút tiền", "Nạp tiền"],
+      enums: ["Rút tiền", "Nạp tiền", "Đơn hàng"],
     },
     id_handler: {
       type: mongoose.Schema.Types.ObjectId,

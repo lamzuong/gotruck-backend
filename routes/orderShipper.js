@@ -202,4 +202,27 @@ app.get("/ordercurrent/:id_shipper", async (req, res) => {
   }
 });
 
+app.put("/locationshipper", async (req, res) => {
+  try {
+    const { id_order, location } = req.body;
+
+    let order = await Order.findById(id_order).lean();
+    let temp = order;
+    if (order.shipper_route) {
+      temp.shipper_route.push(location);
+    } else {
+      temp.shipper_route = [location];
+    }
+    const orderNew = await Order.findByIdAndUpdate(id_order, {
+      shipper_route: temp.shipper_route,
+    })
+      .populate("shipper.id_shipper shipper.truck id_customer")
+      .lean();
+    res.send(orderNew);
+  } catch (error) {
+    console.log(error);
+    res.send({ isNotFound: true });
+  }
+});
+
 module.exports = app;

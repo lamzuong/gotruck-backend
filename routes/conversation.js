@@ -24,9 +24,11 @@ app.get("/:id_customer", async (req, res) => {
       if (lastMessage) {
         listConversation[i].lastMess = lastMessage.message;
         listConversation[i].timeLastMess = lastMessage.createdAt;
+        listConversation[i].read = lastMessage.read;
       } else {
         listConversation[i].lastMess = "";
-        listConversation[i].timeLastMess = new Date();
+        listConversation[i].timeLastMess = new Date("2000-01-10");
+        listConversation[i].read = [];
       }
     }
     listConversation.sort(
@@ -58,9 +60,11 @@ app.get("/shipper/:id_shipper", async (req, res) => {
         );
         listConversation[i].lastMess = lastMessage.message;
         listConversation[i].timeLastMess = lastMessage.createdAt;
+        listConversation[i].read = lastMessage.read;
       } catch (error) {
         listConversation[i].lastMess = "";
-        listConversation[i].timeLastMess = new Date();
+        listConversation[i].timeLastMess = new Date("2000-01-10");
+        listConversation[i].read = [];
       }
     }
     listConversation.sort(
@@ -148,9 +152,16 @@ app.get("/message/:id_conversation", async (req, res) => {
 
 app.post("/message", async (req, res) => {
   try {
-    const mess = new Message(req.body);
-    await mess.save();
-    res.send(mess);
+    const checkConversation = await Conversation.findById(
+      req.body.id_conversation
+    );
+    if (checkConversation && checkConversation.disable) {
+      res.send({ disable: true });
+    } else {
+      const mess = new Message(req.body);
+      await mess.save();  
+      res.send(mess);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });
@@ -190,6 +201,26 @@ app.get("/form/:id_form", async (req, res) => {
     } else {
       res.send({ isNotFound: true });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.put("/read", async (req, res) => {
+  try {
+    const listMessageUnRead = req.body;
+    listMessageUnRead.map(async (item) => {
+      await Message.findByIdAndUpdate(
+        item._id,
+        {
+          read: item.read,
+        },
+        { new: true }
+      );
+    });
+
+    res.send({ data: "ok" });
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });

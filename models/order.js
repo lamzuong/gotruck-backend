@@ -139,6 +139,19 @@ const orderSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    shipper_route: [
+      {
+        address: {
+          type: String,
+        },
+        latitude: {
+          type: Number,
+        },
+        longitude: {
+          type: Number,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

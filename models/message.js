@@ -16,8 +16,9 @@ const messageSchema = new mongoose.Schema(
     userSendModel: {
       type: String,
       required: true,
-      enum: ["Customer", "Shipper","Admin"],
+      enum: ["Customer", "Shipper", "Admin"],
     },
+    read: [{ type: String }],
   },
   { timestamps: true }
 );

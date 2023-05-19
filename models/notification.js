@@ -31,6 +31,8 @@ const notificationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
     },
+    default: false,
+    read: [{ type: String, default: [] }],
   },
   { timestamps: true }
 );

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Bank = require("../models/bank");
 const Shipper = require("../models/shipper");
 const TransactionHistory = require("../models/transactionHistory");
+const Order = require("../models/order");
 
 const app = exprees();
 
@@ -75,8 +76,30 @@ app.get("/history/:id_shipper", async (req, res) => {
       },
       {},
       { sort: { updatedAt: -1 } }
-    );
-    res.send(history);
+    ).lean();
+    const resOrder = await Order.find({
+      "shipper.id_shipper": req.params.id_shipper,
+      status: "Đã giao",
+    });
+    if (resOrder.length > 0) {
+      let feeOrder = [];
+      resOrder.map((item) => {
+        const moneyTemp = (item.total * item.fee) / 100;
+        const temp = {
+          type: "Order",
+          status: "Đã xử lý",
+          money: moneyTemp,
+          createdAt: item.updatedAt,
+          id_order: item.id_order,
+        };
+        feeOrder.push(temp);
+      });
+      const resHistory = history.concat(feeOrder);
+      resHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      res.send(resHistory);
+    } else {
+      res.send(history);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });

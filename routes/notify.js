@@ -99,7 +99,14 @@ app.get("/customer/:id_customer", async (req, res) => {
     ).populate("id_handler id_receiver");
 
     if (notification.length > 0) {
-      res.send(notification);
+      const listNoRead = notification.filter(
+        (item) => item.read.indexOf(id_customer) === -1
+      );
+      const listRead = notification.filter(
+        (item) => item.read.indexOf(id_customer) > -1
+      );
+      const listRes = listNoRead.concat(listRead);
+      res.send(listRes);
     } else {
       res.send({ isNotFound: true });
     }
@@ -125,10 +132,34 @@ app.get("/shipper/:id_shipper", async (req, res) => {
     ).populate("id_handler id_receiver");
 
     if (notification.length > 0) {
-      res.send(notification);
+      const listNoRead = notification.filter(
+        (item) => item.read.indexOf(id_shipper) === -1
+      );
+      const listRead = notification.filter(
+        (item) => item.read.indexOf(id_shipper) > -1
+      );
+      const listRes = listNoRead.concat(listRead);
+      res.send(listRes);
     } else {
       res.send({ isNotFound: true });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ data: "error" });
+  }
+});
+
+app.put("/read", async (req, res) => {
+  try {
+    await Notification.findByIdAndUpdate(
+      req.body._id,
+      {
+        read: req.body.read,
+      },
+      { new: true }
+    );
+
+    res.send({ data: "ok" });
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });
