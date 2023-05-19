@@ -209,7 +209,12 @@ app.put("/locationshipper", async (req, res) => {
     let order = await Order.findById(id_order).lean();
     let temp = order;
     if (order.shipper_route) {
-      temp.shipper_route.push(location);
+      const t = order.shipper_route.find((item) => {
+        item.address === location.address;
+      });
+      if (!t) {
+        temp.shipper_route.push(location);
+      }
     } else {
       temp.shipper_route = [location];
     }
