@@ -88,7 +88,6 @@ app.put("/vehicle/delete", async (req, res) => {
   }
 });
 
-
 app.put("/recharge/:idShipper", async (req, res) => {
   try {
     const { shipperSend, id_handler } = req.body;
