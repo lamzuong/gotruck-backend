@@ -45,7 +45,13 @@ app.put("/", async (req, res) => {
         },
         { new: true }
       );
-
+      await smtp.sendMail({
+        to: data.email,
+        from: adminEmail,
+        subject: "GoTruck - Thông báo về đơn đăng ký trở thành đối tác tài xế", // Tiêu đề email
+        html: `<p>Đơn của bạn đã bị từ chối do thiếu thông tin cụ thể về để xác minh danh tính hoặc phương tiện của bạn</p><br/>
+        <p>Thông tin chi tiết vui lòng liên hệ trực tiếp để tổng đài của GoTruck - 0794861181</p>`,
+      });
       res.send({
         status: "ok",
         message: "Thành công",
