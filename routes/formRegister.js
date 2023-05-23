@@ -32,6 +32,13 @@ app.get("/", async (req, res) => {
 });
 
 app.put("/", async (req, res) => {
+  const smtp = nodeMailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: adminEmail,
+      pass: adminPassword,
+    },
+  });
   try {
     const { data, id_handler, type } = req.body;
     if (type === "denied") {
@@ -49,7 +56,7 @@ app.put("/", async (req, res) => {
         to: data.email,
         from: adminEmail,
         subject: "GoTruck - Thông báo về đơn đăng ký trở thành đối tác tài xế", // Tiêu đề email
-        html: `<p>Đơn của bạn đã bị từ chối do thiếu thông tin cụ thể về để xác minh danh tính hoặc phương tiện của bạn</p><br/>
+        html: `<p>Đơn của bạn đã bị từ chối với lý do: ${data.reason_cancel}</p><br/>
         <p>Thông tin chi tiết vui lòng liên hệ trực tiếp để tổng đài của GoTruck - 0794861181</p>`,
       });
       res.send({
@@ -144,13 +151,6 @@ app.put("/", async (req, res) => {
         { new: true }
       );
 
-      const smtp = nodeMailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: adminEmail,
-          pass: adminPassword,
-        },
-      });
       await smtp.sendMail({
         to: data.email,
         from: adminEmail,
