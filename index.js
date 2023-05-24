@@ -120,6 +120,25 @@ const cancelOrder = async (data) => {
         id_receiver: data.id_customer?._id || data.id_customer,
         userModel: "Customer",
       };
+
+      let date = new Date().getFullYear();
+      const checkHasNotify = await Notification.findOne(
+        {},
+        {},
+        { sort: { createdAt: -1 } }
+      );
+
+      if (checkHasNotify) {
+        let indexLastest = checkHasNotify.id_notify;
+        let indexNew =
+          parseInt(
+            (date % 100) + "" + indexLastest.slice(5, indexLastest.length)
+          ) + 1;
+        notifyData.id_notify = "NTF" + indexNew;
+      } else {
+        notifyData.id_notify = "NTF" + (date % 100) + "00001";
+      }
+
       const notify = new Notification(notifyData);
       await notify.save();
     }
