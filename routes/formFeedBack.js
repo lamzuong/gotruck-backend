@@ -25,36 +25,47 @@ app.get("/id/:id_feedback", async (req, res) => {
 app.put("/", async (req, res) => {
   try {
     const data = req.body;
-    if (data.status === "Đã tiếp nhận") {
-      const feed_back = await FeedBack.findByIdAndUpdate(
-        data._id,
-        {
-          status: data.status,
-          id_handler: data.id_handler,
-          date_receive: new Date(),
-        },
-        { new: true }
-      );
-      res.status(200).send(feed_back);
-    } else if (data.status === "Đã xong") {
-      const feed_back = await FeedBack.findByIdAndUpdate(
-        data._id,
-        {
-          status: data.status,
-          id_handler: data.id_handler,
-          date_complete: new Date(),
-        },
-        { new: true }
-      );
-      await Conversation.findOneAndUpdate(
-        {
-          id_form: feed_back._id,
-        },
-        { disable: true }
-      );
+    const feed_back = await FeedBack.findById(data._id).lean();
+    if (
+      ((feed_back.status === "Đã tiếp nhận" ||
+        feed_back.status === "Đã xong") &&
+        data.status === "Đã tiếp nhận") ||
+      (data.status === "Đã xong" &&
+        feed_back.id_handler + "" !== data.id_handler + "")
+    ) {
       res.status(200).send(feed_back);
     } else {
-      res.status(200).send({ data: "ok" });
+      if (data.status === "Đã tiếp nhận") {
+        const feed_back = await FeedBack.findByIdAndUpdate(
+          data._id,
+          {
+            status: data.status,
+            id_handler: data.id_handler,
+            date_receive: new Date(),
+          },
+          { new: true }
+        );
+        res.status(200).send(feed_back);
+      } else if (data.status === "Đã xong") {
+        const feed_back = await FeedBack.findByIdAndUpdate(
+          data._id,
+          {
+            status: data.status,
+            id_handler: data.id_handler,
+            date_complete: new Date(),
+          },
+          { new: true }
+        );
+        await Conversation.findOneAndUpdate(
+          {
+            id_form: feed_back._id,
+          },
+          { disable: true }
+        );
+        res.status(200).send(feed_back);
+      } else {
+        res.status(200).send({ data: "ok" });
+      }
     }
   } catch (error) {
     console.log(error);

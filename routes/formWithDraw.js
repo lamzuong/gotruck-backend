@@ -30,17 +30,24 @@ app.get("/", async (req, res) => {
 app.put("/", async (req, res) => {
   try {
     const data = req.body;
-    const transaction_history = await TransactionHistory.findByIdAndUpdate(
-      data._id,
-      {
-        status: data.status,
-        id_handler: data.id_handler,
-        image_proof: data.image_proof,
-        approval_date: new Date(),
-      },
-      { new: true }
+    const transaction_history_temp = await TransactionHistory.findById(
+      data._id
     );
-    res.status(200).send(transaction_history);
+    if (transaction_history_temp.status === "Đã xử lý") {
+      res.status(200).send(transaction_history_temp);
+    } else {
+      const transaction_history = await TransactionHistory.findByIdAndUpdate(
+        data._id,
+        {
+          status: data.status,
+          id_handler: data.id_handler,
+          image_proof: data.image_proof,
+          approval_date: new Date(),
+        },
+        { new: true }
+      );
+      res.status(200).send(transaction_history);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({ data: "error" });

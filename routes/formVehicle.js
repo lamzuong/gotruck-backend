@@ -29,39 +29,37 @@ app.get("/", async (req, res) => {
 app.put("/", async (req, res) => {
   try {
     const { data, id_handler, type } = req.body;
-    if (type === "denied") {
-      const truck = await TruckShipper.findByIdAndUpdate(
-        data._id,
-        {
-          status: "Từ chối",
-          reason_cancel: data.reason_cancel,
-          id_handler: id_handler,
-          approval_date: new Date(),
-        },
-        { new: true }
-      );
 
-      res.send({
-        status: "ok",
-        message: "Thành công",
-        data: truck,
-      });
+    const truckTemp = await TruckShipper.findById(data._id);
+    if (truckTemp.status !== "Chưa duyệt") {
+      res.send(truckTemp);
     } else {
-      const truck = await TruckShipper.findByIdAndUpdate(
-        data._id,
-        {
-          status: "Đã duyệt",
-          id_handler: id_handler,
-          approval_date: new Date(),
-        },
-        { new: true }
-      );
+      if (type === "denied") {
+        const truck = await TruckShipper.findByIdAndUpdate(
+          data._id,
+          {
+            status: "Từ chối",
+            reason_cancel: data.reason_cancel,
+            id_handler: id_handler,
+            approval_date: new Date(),
+          },
+          { new: true }
+        );
 
-      res.send({
-        status: "ok",
-        message: "Thành công",
-        data: truck,
-      });
+        res.send(truck);
+      } else {
+        const truck = await TruckShipper.findByIdAndUpdate(
+          data._id,
+          {
+            status: "Đã duyệt",
+            id_handler: id_handler,
+            approval_date: new Date(),
+          },
+          { new: true }
+        );
+
+        res.send(truck);
+      }
     }
   } catch (error) {
     console.log(error);
