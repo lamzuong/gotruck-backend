@@ -190,6 +190,10 @@ io.on("connection", (socket) => {
   socket.on("send_message", (data) => {
     io.emit("message" + data.id_receive, data);
   });
+
+  socket.on("block_account", (data) => {
+    io.emit("block_account", data);
+  });
 });
 
 server.listen(8000, () => {
